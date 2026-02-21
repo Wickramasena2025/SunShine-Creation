@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunShine Creation | Fresh Flowers for Every Moment</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#064e3b',
+                        secondary: '#065f46',
+                        accent: '#d1fae5',
+                        cream: '#f9fafb',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        serif: ['Lora', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { scroll-behavior: smooth; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(6, 78, 59, 0.1);
+        }
+
+        .hero-pattern {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .shop-pattern {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .text-shadow { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #064e3b;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0px !important; }
+        
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #065f46; }
+
+        .admin-editable {
+            border: 2px dashed #fbbf24;
+            position: relative;
+            cursor: pointer;
+        }
+        .admin-editable::after {
+            content: '✎ Edit';
+            position: absolute;
+            top: -20px;
+            right: 0;
+            background: #fbbf24;
+            color: #000;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: none;
+            z-index: 10;
+        }
+        .admin-editable:hover::after { display: block; }
+
+        .admin-tab { transition: all 0.3s ease; }
+        .admin-tab.active {
+            background-color: #064e3b;
+            color: white;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+        }
+
+        .product-image-preview {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+        }
+
+        .shop-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(249, 250, 251, 0.92);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-cream antialiased overflow-x-hidden">
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="text-center">
+            <i class="fas fa-leaf text-6xl text-white animate-bounce mb-4"></i>
+            <h2 class="text-2xl text-white font-serif tracking-widest">SUNSHINE CREATION</h2>
+        </div>
+    </div>
+
+    <!-- Google Translate Element (Hidden) -->
+    <div id="google_translate_element" class="hidden"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="fas fa-spa text-primary text-3xl mr-2"></i>
+                    <span class="font-serif text-2xl font-bold text-primary tracking-wide editable-content" data-key="brand_name">SunShine</span>
+                </div>
+
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_home">Home</a>
+                    <a href="#shop" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_shop">Shop</a>
+                    <a href="#about" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_about">About</a>
+                    <a href="#contact" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_contact">Contact</a>
+                    
+                    <div class="relative group">
+                        <button class="text-primary hover:text-secondary font-medium flex items-center gap-1">
+                            <i class="fas fa-globe"></i> <span id="current-lang">EN</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border border-gray-100">
+                            <button onclick="changeLanguage('en')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">English</button>
+                            <button onclick="changeLanguage('si')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Sinhala</button>
+                            <button onclick="changeLanguage('ta')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Tamil</button>
+                        </div>
+                    </div>
+
+                    <div class="relative cursor-pointer" onclick="toggleCart()">
+                        <i class="fas fa-shopping-bag text-primary text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </div>
+
+                    <button onclick="toggleAdminLogin()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded text-gray-600 font-semibold">
+                        <i class="fas fa-lock"></i> Admin
+                    </button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-primary focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_home">Home</a>
+                <a href="#shop" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_shop">Shop</a>
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_about">About</a>
+                <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-modal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full shadow-2xl transform transition-all scale-95 opacity-0" id="admin-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif font-bold text-primary">Admin Access</h3>
+                <button onclick="toggleAdminLogin()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="admin-user" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" placeholder="admin">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="admin-pass" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" placeholder="••••••">
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-2 rounded-md hover:bg-secondary transition shadow-lg">Login</button>
+                <p id="login-error" class="text-red-500 text-sm hidden text-center">Invalid credentials.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Enhanced Admin Panel -->
+    <div id="admin-panel" class="fixed right-0 top-0 w-96 bg-white shadow-2xl h-screen transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto border-l border-gray-200 flex flex-col">
+        <div class="p-6 bg-primary text-white">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <i class="fas fa-cog"></i> Admin Dashboard
+                </h2>
+                <button onclick="toggleAdminMode()" class="text-white hover:text-red-300 text-sm font-bold bg-white bg-opacity-20 px-3 py-1 rounded">
+                    <i class="fas fa-sign-out-alt"></i> Exit
+                </button>
+            </div>
+            <p class="text-xs text-green-100">Manage your website content, images, and appearance</p>
+        </div>
+
+        <div class="flex border-b border-gray-200">
+            <button onclick="switchAdminTab('content')" class="admin-tab active flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-content">
+                <i class="fas fa-edit"></i> Content
+            </button>
+            <button onclick="switchAdminTab('images')" class="admin-tab flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-images">
+                <i class="fas fa-images"></i> Images
+            </button>
+            <button onclick="switchAdminTab('appearance')" class="admin-tab flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-appearance">
+                <i class="fas fa-paint-brush"></i> Theme
+            </button>
+            <button onclick="switchAdminTab('links')" class="admin-tab flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-links">
+                <i class="fas fa-link"></i> Links
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6" id="admin-content">
+            
+            <!-- Content Tab -->
+            <div id="panel-content" class="space-y-6">
+                <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                    <h4 class="font-semibold text-green-800 mb-2"><i class="fas fa-info-circle"></i> Quick Edit</h4>
+                    <p class="text-xs text-green-700">Click on any text on the website to edit it directly, or use the fields below.</p>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-home text-primary"></i> Hero Section
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Hero Title</label>
+                            <input type="text" id="edit-hero-title" onchange="updateContent('hero_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Hero Subtitle</label>
+                            <textarea id="edit-hero-subtitle" onchange="updateContent('hero_subtitle', this.value)" rows="2" class="w-full px-3 py-2 border rounded text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Button 1 Text</label>
+                            <input type="text" id="edit-btn1-text" onchange="updateContent('btn1_text', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Button 2 Text</label>
+                            <input type="text" id="edit-btn2-text" onchange="updateContent('btn2_text', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-shopping-bag text-primary"></i> Shop Section
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Section Title</label>
+                            <input type="text" id="edit-shop-title" onchange="updateContent('shop_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-info-circle text-primary"></i> About Section
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">About Title</label>
+                            <input type="text" id="edit-about-title" onchange="updateContent('about_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Paragraph 1</label>
+                            <textarea id="edit-about-p1" onchange="updateContent('about_p1', this.value)" rows="3" class="w-full px-3 py-2 border rounded text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Paragraph 2</label>
+                            <textarea id="edit-about-p2" onchange="updateContent('about_p2', this.value)" rows="3" class="w-full px-3 py-2 border rounded text-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-address-card text-primary"></i> Contact Info
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Visit Us Title</label>
+                            <input type="text" id="edit-contact-visit-title" onchange="updateContent('contact_visit_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Address</label>
+                            <textarea id="edit-address" onchange="updateContent('contact_address', this.value)" rows="2" class="w-full px-3 py-2 border rounded text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Phone Number</label>
+                            <input type="text" id="edit-phone" onchange="updateContent('contact_phone', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Email</label>
+                            <input type="text" id="edit-email" onchange="updateContent('contact_email', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-bars text-primary"></i> Navigation
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Brand Name</label>
+                            <input type="text" id="edit-brand-name" onchange="updateContent('brand_name', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Home Menu</label>
+                            <input type="text" id="edit-nav-home" onchange="updateContent('nav_home', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Shop Menu</label>
+                            <input type="text" id="edit-nav-shop" onchange="updateContent('nav_shop', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">About Menu</label>
+                            <input type="text" id="edit-nav-about" onchange="updateContent('nav_about', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Contact Menu</label>
+                            <input type="text" id="edit-nav-contact" onchange="updateContent('nav_contact', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="addNewProduct()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-bold shadow-md flex items-center justify-center gap-2">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+                
+                <button onclick="resetAllData()" class="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition font-bold shadow-md flex items-center justify-center gap-2">
+                    <i class="fas fa-trash"></i> Reset All Changes
+                </button>
+            </div>
+
+            <!-- Images Tab -->
+            <div id="panel-images" class="space-y-6 hidden">
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                    <h4 class="font-semibold text-purple-800 mb-2"><i class="fas fa-images"></i> Image Manager</h4>
+                    <p class="text-xs text-purple-700">Upload and change images for all sections. Click on any image on the website to change it directly.</p>
+                </div>
+
+                <!-- Hero Image -->
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-image text-primary"></i> Hero Background
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="relative">
+                            <img id="preview-hero-image" class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('hero-image-upload').click()">
+                                <span class="text-white font-semibold"><i class="fas fa-camera"></i> Change</span>
+                            </div>
+                        </div>
+                        <input type="file" id="hero-image-upload" accept="image/*" onchange="handleImageUpload(this, 'hero')" class="hidden">
+                        <p class="text-xs text-gray-500">Recommended: 1920x1080px or larger</p>
+                    </div>
+                </div>
+
+                <!-- Shop Collection Background -->
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-shopping-bag text-primary"></i> Shop Section Background
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="relative">
+                            <img id="preview-shop-image" class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('shop-image-upload').click()">
+                                <span class="text-white font-semibold"><i class="fas fa-camera"></i> Change</span>
+                            </div>
+                        </div>
+                        <input type="file" id="shop-image-upload" accept="image/*" onchange="handleImageUpload(this, 'shop')" class="hidden">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="shop-bg-enable" onchange="toggleShopBackground(this.checked)" class="rounded">
+                            <label class="text-sm text-gray-700">Enable background image (overlay will be applied)</label>
+                        </div>
+                        <p class="text-xs text-gray-500">Recommended: Subtle floral pattern or texture</p>
+                    </div>
+                </div>
+
+                <!-- About Image -->
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-user text-primary"></i> About Section Image
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="relative">
+                            <img id="preview-about-image" class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('about-image-upload').click()">
+                                <span class="text-white font-semibold"><i class="fas fa-camera"></i> Change</span>
+                            </div>
+                        </div>
+                        <input type="file" id="about-image-upload" accept="image/*" onchange="handleImageUpload(this, 'about')" class="hidden">
+                        <p class="text-xs text-gray-500">Recommended: 800x600px, portrait orientation</p>
+                    </div>
+                </div>
+
+                <!-- Product Images Manager -->
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fas fa-box-open text-primary"></i> Product Images
+                    </h3>
+                    <div class="space-y-2 max-h-64 overflow-y-auto" id="product-images-list">
+                        <!-- Product list injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appearance Tab -->
+            <div id="panel-appearance" class="space-y-6 hidden">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                    <h4 class="font-semibold text-blue-800 mb-2"><i class="fas fa-palette"></i> Theme Colors</h4>
+                    <p class="text-xs text-blue-700">Change the main colors of your website.</p>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Primary Color (Dark Green)</h3>
+                    <div class="flex items-center gap-4">
+                        <input type="color" id="primary-color-picker" value="#064e3b" onchange="updateThemeColor('primary', this.value)">
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-600">Current: <span id="primary-color-value">#064e3b</span></p>
+                            <p class="text-xs text-gray-400">Used for headers, buttons, and navigation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Secondary Color</h3>
+                    <div class="flex items-center gap-4">
+                        <input type="color" id="secondary-color-picker" value="#065f46" onchange="updateThemeColor('secondary', this.value)">
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-600">Current: <span id="secondary-color-value">#065f46</span></p>
+                            <p class="text-xs text-gray-400">Used for hover states and accents</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Page Background</h3>
+                    <div class="flex items-center gap-4">
+                        <input type="color" id="bg-color-picker" value="#f9fafb" onchange="updateThemeColor('bg', this.value)">
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-600">Current: <span id="bg-color-value">#f9fafb</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Hero Overlay Darkness</h3>
+                    <input type="range" id="hero-opacity" min="0" max="90" value="40" oninput="updateHeroOpacity(this.value)" class="w-full">
+                    <p class="text-xs text-gray-500 mt-1">Adjust the dark overlay on the hero image</p>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Shop Overlay Opacity</h3>
+                    <input type="range" id="shop-opacity" min="0" max="95" value="92" oninput="updateShopOpacity(this.value)" class="w-full">
+                    <p class="text-xs text-gray-500 mt-1">Adjust overlay when shop background is enabled</p>
+                </div>
+
+                <button onclick="resetTheme()" class="w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition font-bold shadow-md">
+                    Reset to Default Theme
+                </button>
+            </div>
+
+            <!-- Links Tab -->
+            <div id="panel-links" class="space-y-6 hidden">
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                    <h4 class="font-semibold text-purple-800 mb-2"><i class="fas fa-link"></i> Social & Contact Links</h4>
+                    <p class="text-xs text-purple-700">Update your social media and contact links.</p>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fab fa-whatsapp text-green-500"></i> WhatsApp Settings
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">WhatsApp Number (with country code)</label>
+                            <input type="text" id="edit-whatsapp-num" placeholder="94771234567" onchange="updateLink('whatsapp', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Default Message</label>
+                            <input type="text" id="edit-whatsapp-msg" value="Hello! I'm interested in your flowers." onchange="updateLink('whatsapp_msg', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="show-whatsapp-btn" checked onchange="toggleFloatingButton('whatsapp', this.checked)" class="rounded">
+                            <label class="text-sm text-gray-700">Show floating WhatsApp button</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fab fa-facebook text-blue-600"></i> Facebook Settings
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Facebook Page URL</label>
+                            <input type="url" id="edit-facebook-url" placeholder="https://facebook.com/yourpage" onchange="updateLink('facebook', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="show-facebook-btn" onchange="toggleFloatingButton('facebook', this.checked)" class="rounded">
+                            <label class="text-sm text-gray-700">Show floating Facebook button</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fab fa-instagram text-pink-600"></i> Instagram Settings
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Instagram URL</label>
+                            <input type="url" id="edit-instagram-url" placeholder="https://instagram.com/yourhandle" onchange="updateLink('instagram', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Hero Button Links</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Button 1 Link (Order Now)</label>
+                            <select id="edit-btn1-link" onchange="updateLink('btn1_link', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                                <option value="#shop">Shop Section</option>
+                                <option value="#contact">Contact Section</option>
+                                <option value="https://wa.me/">WhatsApp Direct</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Button 2 Link (WhatsApp)</label>
+                            <input type="text" id="edit-btn2-link" onchange="updateLink('btn2_link', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-3">Footer Social Links</h3>
+                    <div class="space-y-3">
+                        <input type="url" id="edit-footer-fb" placeholder="Facebook URL" onchange="updateLink('footer_fb', this.value)" class="w-full px-3 py-2 border rounded text-sm mb-2">
+                        <input type="url" id="edit-footer-ig" placeholder="Instagram URL" onchange="updateLink('footer_ig', this.value)" class="w-full px-3 py-2 border rounded text-sm mb-2">
+                        <input type="url" id="edit-footer-wa" placeholder="WhatsApp URL" onchange="updateLink('footer_wa', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center hero-pattern" style="background-image: url('https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop');">
+        <div class="absolute inset-0 bg-black bg-opacity-40" id="hero-overlay"></div>
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto gs-reveal">
+            <span class="text-white text-lg md:text-xl font-medium tracking-[0.2em] uppercase mb-4 block text-shadow editable-content" data-key="hero_welcome">Welcome to SunShine Creation</span>
+            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight text-shadow editable-content" data-key="hero_title">
+                Fresh Flowers for Every Moment
+            </h1>
+            <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light editable-content" data-key="hero_subtitle">
+                Handcrafted bouquets delivered with love. Making your special occasions unforgettable with the beauty of nature.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#shop" id="hero-btn1" class="px-8 py-4 bg-primary hover:bg-secondary text-white font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn1_text">
+                    Order Now <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="https://wa.me/94771234567" id="hero-btn2" target="_blank" class="px-8 py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn2_text">
+                    <i class="fab fa-whatsapp text-xl"></i> WhatsApp Us
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+                <div class="p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-2xl mb-4">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primary mb-2 editable-content" data-key="feat1_title">Island-wide Delivery</h3>
+                    <p class="text-gray-600 editable-content" data-key="feat1_desc">Fast and reliable delivery across Sri Lanka to your doorstep.</p>
+                </div>
+                <div class="p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-2xl mb-4">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primary mb-2 editable-content" data-key="feat2_title">Freshly Picked</h3>
+                    <p class="text-gray-600 editable-content" data-key="feat2_desc">We source the freshest flowers daily from local growers.</p>
+                </div>
+                <div class="p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
+                    <div class="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-2xl mb-4">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold text-primary mb-2 editable-content" data-key="feat3_title">Made with Love</h3>
+                    <p class="text-gray-600 editable-content" data-key="feat3_desc">Each bouquet is carefully arranged by our expert florists.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Section with Background Image Support -->
+    <section id="shop" class="relative py-20 shop-pattern" style="background-image: none;">
+        <div class="shop-overlay" id="shop-overlay" style="background: rgba(249, 250, 251, 1);"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 gs-reveal">
+                <h2 class="text-4xl font-serif font-bold text-primary mb-4 editable-content" data-key="shop_title">Our Collection</h2>
+                <div class="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
+                
+                <div class="flex flex-wrap justify-center gap-4" id="category-filters">
+                    <button onclick="filterProducts('all')" class="filter-btn active px-6 py-2 rounded-full border border-primary bg-primary text-white transition">All</button>
+                    <button onclick="filterProducts('love')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Love & Romance</button>
+                    <button onclick="filterProducts('birthday')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Birthday</button>
+                    <button onclick="filterProducts('wedding')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Wedding</button>
+                    <button onclick="filterProducts('sympathy')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Sympathy</button>
+                </div>
+            </div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Products injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 gs-reveal-left">
+                    <div class="relative">
+                        <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary rounded-full opacity-20"></div>
+                        <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-secondary rounded-full opacity-20"></div>
+                        <img id="about-image" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop" alt="Florist at work" class="relative rounded-2xl shadow-2xl w-full object-cover h-[500px]">
+                    </div>
+                </div>
+                <div class="lg:w-1/2 gs-reveal-right">
+                    <h2 class="text-4xl font-serif font-bold text-primary mb-6 editable-content" data-key="about_title">Our Story</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed editable-content" data-key="about_p1">
+                        Founded in the heart of Sri Lanka, SunShine Creation began with a simple mission: to bring joy through the language of flowers. What started as a small home-based business has blossomed into a beloved floral destination.
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed editable-content" data-key="about_p2">
+                        We believe that every bouquet tells a story. Whether it's a celebration of love, a birthday surprise, or a gesture of sympathy, our expert florists pour their passion into every arrangement.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="border-l-4 border-primary pl-4">
+                            <h4 class="text-2xl font-bold text-primary editable-content" data-key="stat1_num">10+</h4>
+                            <p class="text-sm text-gray-500 editable-content" data-key="stat1_text">Years Experience</p>
+                        </div>
+                        <div class="border-l-4 border-primary pl-4">
+                            <h4 class="text-2xl font-bold text-primary editable-content" data-key="stat2_num">5000+</h4>
+                            <p class="text-sm text-gray-500 editable-content" data-key="stat2_text">Happy Customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-primary text-white relative">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-serif font-bold mb-4 editable-content" data-key="contact_title">Get in Touch</h2>
+                <p class="text-green-100 editable-content" data-key="contact_subtitle">Have a question or custom order? We'd love to hear from you.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8 gs-reveal">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_visit_title">Visit Us</h4>
+                            <p class="text-green-100 editable-content" data-key="contact_address">123 Flower Road, Colombo 07, Sri Lanka</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone-alt text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_call_title">Call Us</h4>
+                            <p class="text-green-100 editable-content" data-key="contact_phone">+94 77 123 4567</p>
+                            <p class="text-green-100 text-sm mt-1 editable-content" data-key="contact_hours">Mon - Sat: 9:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_email_title">Email Us</h4>
+                            <p class="text-green-100 editable-content" data-key="contact_email">hello@sunshinecreation.lk</p>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-4 pt-4">
+                        <a id="social-fb" href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition"><i class="fab fa-facebook-f"></i></a>
+                        <a id="social-ig" href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition"><i class="fab fa-instagram"></i></a>
+                        <a id="social-wa" href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 text-gray-800 shadow-2xl gs-reveal">
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                <input type="tel" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea rows="4" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-4 rounded-lg transition shadow-lg transform hover:-translate-y-1">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-spa text-primary text-2xl mr-2"></i>
+                        <span class="font-serif text-xl font-bold editable-content" data-key="footer_brand">SunShine Creation</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed editable-content" data-key="footer_desc">
+                        Bringing nature's beauty to your doorstep. Premium floral arrangements for every occasion in Sri Lanka.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-primary editable-content" data-key="footer_links_title">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#home" class="hover:text-white transition editable-content" data-key="footer_link_home">Home</a></li>
+                        <li><a href="#shop" class="hover:text-white transition editable-content" data-key="footer_link_shop">Shop</a></li>
+                        <li><a href="#about" class="hover:text-white transition editable-content" data-key="footer_link_about">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-white transition editable-content" data-key="footer_link_contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-primary editable-content" data-key="footer_cat_title">Categories</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat1">Wedding Flowers</a></li>
+                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat2">Birthday Bouquets</a></li>
+                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat3">Anniversary Gifts</a></li>
+                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat4">Sympathy Wreaths</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-4 text-primary editable-content" data-key="footer_newsletter_title">Newsletter</h4>
+                    <p class="text-gray-400 text-sm mb-4 editable-content" data-key="footer_newsletter_desc">Subscribe for seasonal offers.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="bg-gray-800 text-white px-4 py-2 rounded-l-md focus:outline-none w-full text-sm">
+                        <button class="bg-primary px-4 py-2 rounded-r-md hover:bg-secondary transition"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm editable-content" data-key="footer_copyright">&copy; 2023 SunShine Creation. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0 text-gray-500 text-sm">
+                    <a href="#" class="hover:text-white editable-content" data-key="footer_privacy">Privacy Policy</a>
+                    <a href="#" class="hover:text-white editable-content" data-key="footer_terms">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Buttons -->
+    <div id="floating-buttons" class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
+        <a id="float-whatsapp" href="https://wa.me/94771234567" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 animate-pulse">
+            <i class="fab fa-whatsapp text-3xl"></i>
+        </a>
+        <a id="float-facebook" href="https://facebook.com" target="_blank" class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-700 transition transform hover:scale-110 hidden">
+            <i class="fab fa-facebook-f text-xl"></i>
+        </a>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeProductModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="rounded-lg overflow-hidden h-64 md:h-auto relative group">
+                                <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer" onclick="if(state.isAdmin) changeProductImage(state.currentModalProduct.id)">
+                                    <span class="text-white font-bold"><i class="fas fa-camera"></i> Change Image</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col justify-center">
+                                <h3 class="text-2xl leading-6 font-serif font-bold text-gray-900 mb-2" id="modal-title"></h3>
+                                <p class="text-primary font-bold text-xl mb-4" id="modal-price"></p>
+                                <p class="text-gray-500 text-sm mb-6" id="modal-desc"></p>
+                                
+                                <div class="flex items-center mb-6">
+                                    <span class="mr-3 text-gray-700">Quantity:</span>
+                                    <div class="flex items-center border border-gray-300 rounded">
+                                        <button onclick="adjustModalQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button>
+                                        <span id="modal-qty" class="px-3 py-1 border-l border-r border-gray-300">1</span>
+                                        <button onclick="adjustModalQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button>
+                                    </div>
+                                </div>
+
+                                <button onclick="addToCartFromModal()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition shadow-md">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="closeProductModal()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+        <div class="p-6 bg-primary text-white flex justify-between items-center">
+            <h2 class="text-xl font-bold">Your Cart</h2>
+            <button onclick="toggleCart()" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <div class="text-center text-gray-500 mt-10">Your cart is empty</div>
+        </div>
+        <div class="p-6 border-t border-gray-200 bg-gray-50">
+            <div class="flex justify-between mb-4 text-lg font-bold text-gray-800">
+                <span>Total:</span>
+                <span id="cart-total">Rs. 0.00</span>
+            </div>
+            <button onclick="checkout()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-bold shadow-lg">
+                Checkout via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fas fa-check-circle text-green-400"></i>
+        <span id="toast-message">Item added to cart</span>
+    </div>
+
+    <!-- Hidden File Input for Product Image Change -->
+    <input type="file" id="product-image-changer" accept="image/*" class="hidden" onchange="handleProductImageChange(this)">
+
+    <script>
+        const state = {
+            isAdmin: false,
+            cart: [],
+            currentEditProductId: null,
+            content: {
+                hero_welcome: "Welcome to SunShine Creation",
+                hero_title: "Fresh Flowers for Every Moment",
+                hero_subtitle: "Handcrafted bouquets delivered with love. Making your special occasions unforgettable with the beauty of nature.",
+                btn1_text: "Order Now",
+                btn2_text: "WhatsApp Us",
+                brand_name: "SunShine",
+                nav_home: "Home",
+                nav_shop: "Shop",
+                nav_about: "About",
+                nav_contact: "Contact",
+                feat1_title: "Island-wide Delivery",
+                feat1_desc: "Fast and reliable delivery across Sri Lanka to your doorstep.",
+                feat2_title: "Freshly Picked",
+                feat2_desc: "We source the freshest flowers daily from local growers.",
+                feat3_title: "Made with Love",
+                feat3_desc: "Each bouquet is carefully arranged by our expert florists.",
+                shop_title: "Our Collection",
+                about_title: "Our Story",
+                about_p1: "Founded in the heart of Sri Lanka, SunShine Creation began with a simple mission: to bring joy through the language of flowers. What started as a small home-based business has blossomed into a beloved floral destination.",
+                about_p2: "We believe that every bouquet tells a story. Whether it's a celebration of love, a birthday surprise, or a gesture of sympathy, our expert florists pour their passion into every arrangement.",
+                stat1_num: "10+",
+                stat1_text: "Years Experience",
+                stat2_num: "5000+",
+                stat2_text: "Happy Customers",
+                contact_title: "Get in Touch",
+                contact_subtitle: "Have a question or custom order? We'd love to hear from you.",
+                contact_visit_title: "Visit Us",
+                contact_address: "123 Flower Road, Colombo 07, Sri Lanka",
+                contact_call_title: "Call Us",
+                contact_phone: "+94 77 123 4567",
+                contact_hours: "Mon - Sat: 9:00 AM - 6:00 PM",
+                contact_email_title: "Email Us",
+                contact_email: "hello@sunshinecreation.lk",
+                footer_brand: "SunShine Creation",
+                footer_desc: "Bringing nature's beauty to your doorstep. Premium floral arrangements for every occasion in Sri Lanka.",
+                footer_links_title: "Quick Links",
+                footer_link_home: "Home",
+                footer_link_shop: "Shop",
+                footer_link_about: "About Us",
+                footer_link_contact: "Contact",
+                footer_cat_title: "Categories",
+                footer_cat1: "Wedding Flowers",
+                footer_cat2: "Birthday Bouquets",
+                footer_cat3: "Anniversary Gifts",
+                footer_cat4: "Sympathy Wreaths",
+                footer_newsletter_title: "Newsletter",
+                footer_newsletter_desc: "Subscribe for seasonal offers.",
+                footer_copyright: "© 2023 SunShine Creation. All rights reserved.",
+                footer_privacy: "Privacy Policy",
+                footer_terms: "Terms of Service"
+            },
+            links: {
+                whatsapp: "94771234567",
+                whatsapp_msg: "Hello! I'm interested in your flowers.",
+                facebook: "https://facebook.com",
+                instagram: "https://instagram.com",
+                btn1_link: "#shop",
+                btn2_link: "https://wa.me/94771234567",
+                footer_fb: "#",
+                footer_ig: "#",
+                footer_wa: "#"
+            },
+            images: {
+                hero: "https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop",
+                shop: "",
+                about: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop"
+            },
+            theme: {
+                primary: "#064e3b",
+                secondary: "#065f46",
+                bg: "#f9fafb",
+                heroOpacity: 40,
+                shopOpacity: 92,
+                shopBgEnabled: false
+            },
+            buttons: {
+                showWhatsapp: true,
+                showFacebook: false
+            },
+            products: [
+                {
+                    id: 1,
+                    name: "Eternal Love Rose Box",
+                    price: 4500,
+                    category: "love",
+                    image: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?q=80&w=800&auto=format&fit=crop",
+                    desc: "A luxurious box of 12 red roses, perfect for expressing deep love and affection."
+                },
+                {
+                    id: 2,
+                    name: "Sunshine Mixed Bouquet",
+                    price: 3200,
+                    category: "birthday",
+                    image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=800&auto=format&fit=crop",
+                    desc: "Bright sunflowers and daisies to bring a smile to anyone's face on their special day."
+                },
+                {
+                    id: 3,
+                    name: "White Elegance Wedding Set",
+                    price: 15000,
+                    category: "wedding",
+                    image: "https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=800&auto=format&fit=crop",
+                    desc: "Pure white lilies and roses arranged for the perfect bridal bouquet."
+                },
+                {
+                    id: 4,
+                    name: "Peaceful Lily Wreath",
+                    price: 8500,
+                    category: "sympathy",
+                    image: "https://images.unsplash.com/photo-1494336934272-f0efcedfc8d7?q=80&w=800&auto=format&fit=crop",
+                    desc: "A respectful arrangement of white lilies to convey your condolences."
+                },
+                {
+                    id: 5,
+                    name: "Pink Romance",
+                    price: 3800,
+                    category: "love",
+                    image: "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?q=80&w=800&auto=format&fit=crop",
+                    desc: "Soft pink roses and carnations for a gentle, romantic gesture."
+                },
+                {
+                    id: 6,
+                    name: "Tropical Paradise",
+                    price: 5500,
+                    category: "birthday",
+                    image: "https://images.unsplash.com/photo-1523694576729-dc99e9c0f9b4?q=80&w=800&auto=format&fit=crop",
+                    desc: "Exotic birds of paradise and orchids for a unique and vibrant gift."
+                }
+            ],
+            currentModalProduct: null,
+            currentModalQty: 1
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+                initAnimations();
+            }, 1500);
+
+            renderProducts();
+            updateCartCount();
+            loadContentToInputs();
+            applyTheme();
+            applyLinks();
+            renderProductImagesList();
+            
+            window.googleTranslateElementInit = () => {
+                new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,si,ta', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            };
+            
+            const script = document.createElement('script');
+            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            document.head.appendChild(script);
+        });
+
+        function loadContentToInputs() {
+            Object.keys(state.content).forEach(key => {
+                const input = document.getElementById(`edit-${key.replace(/_/g, '-')}`);
+                if (input) input.value = state.content[key];
+            });
+            
+            document.getElementById('edit-whatsapp-num').value = state.links.whatsapp;
+            document.getElementById('edit-whatsapp-msg').value = state.links.whatsapp_msg;
+            document.getElementById('edit-facebook-url').value = state.links.facebook;
+            document.getElementById('edit-instagram-url').value = state.links.instagram;
+            document.getElementById('edit-btn2-link').value = state.links.btn2_link;
+            document.getElementById('edit-footer-fb').value = state.links.footer_fb;
+            document.getElementById('edit-footer-ig').value = state.links.footer_ig;
+            document.getElementById('edit-footer-wa').value = state.links.footer_wa;
+            
+            document.getElementById('primary-color-picker').value = state.theme.primary;
+            document.getElementById('secondary-color-picker').value = state.theme.secondary;
+            document.getElementById('bg-color-picker').value = state.theme.bg;
+            document.getElementById('hero-opacity').value = state.theme.heroOpacity;
+            document.getElementById('shop-opacity').value = state.theme.shopOpacity;
+            
+            // Set image previews
+            document.getElementById('preview-hero-image').src = state.images.hero;
+            document.getElementById('preview-about-image').src = state.images.about;
+            if (state.images.shop) {
+                document.getElementById('preview-shop-image').src = state.images.shop;
+                document.getElementById('shop-bg-enable').checked = state.theme.shopBgEnabled;
+            }
+        }
+
+        function updateContent(key, value) {
+            state.content[key] = value;
+            document.querySelectorAll(`[data-key="${key}"]`).forEach(el => {
+                const icon = el.querySelector('i');
+                if (icon && el.innerHTML.includes('class="')) {
+                    el.innerHTML = value + ' ' + icon.outerHTML;
+                } else {
+                    el.innerText = value;
+                }
+            });
+            showToast('Content updated!');
+        }
+
+        function updateLink(type, value) {
+            state.links[type] = value;
+            applyLinks();
+            showToast('Link updated!');
+        }
+
+        function applyLinks() {
+            const waLink = `https://wa.me/${state.links.whatsapp}`;
+            document.getElementById('float-whatsapp').href = waLink;
+            document.getElementById('hero-btn2').href = waLink;
+            document.getElementById('social-wa').href = state.links.footer_wa || waLink;
+            document.getElementById('float-facebook').href = state.links.facebook;
+            document.getElementById('social-fb').href = state.links.footer_fb || state.links.facebook;
+            document.getElementById('social-ig').href = state.links.footer_ig || state.links.instagram;
+            document.getElementById('hero-btn1').href = state.links.btn1_link;
+        }
+
+        function toggleFloatingButton(type, show) {
+            state.buttons[`show${type.charAt(0).toUpperCase() + type.slice(1)}`] = show;
+            if (type === 'whatsapp') {
+                document.getElementById('float-whatsapp').style.display = show ? 'flex' : 'none';
+            } else if (type === 'facebook') {
+                document.getElementById('float-facebook').classList.toggle('hidden', !show);
+            }
+        }
+
+        function handleImageUpload(input, type) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.images[type] = e.target.result;
+                    
+                    const preview = document.getElementById(`preview-${type}-image`);
+                    preview.src = e.target.result;
+                    
+                    if (type === 'hero') {
+                        document.querySelector('.hero-pattern').style.backgroundImage = `url('${e.target.result}')`;
+                    } else if (type === 'about') {
+                        document.getElementById('about-image').src = e.target.result;
+                    } else if (type === 'shop') {
+                        document.getElementById('shop').style.backgroundImage = `url('${e.target.result}')`;
+                        state.theme.shopBgEnabled = true;
+                        document.getElementById('shop-bg-enable').checked = true;
+                        updateShopOverlay();
+                    }
+                    
+                    showToast('Image uploaded successfully!');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function toggleShopBackground(enabled) {
+            state.theme.shopBgEnabled = enabled;
+            const shopSection = document.getElementById('shop');
+            if (enabled && state.images.shop) {
+                shopSection.style.backgroundImage = `url('${state.images.shop}')`;
+            } else {
+                shopSection.style.backgroundImage = 'none';
+            }
+            updateShopOverlay();
+        }
+
+        function updateShopOpacity(value) {
+            state.theme.shopOpacity = value;
+            updateShopOverlay();
+        }
+
+        function updateShopOverlay() {
+            const opacity = state.theme.shopOpacity / 100;
+            document.getElementById('shop-overlay').style.background = `rgba(249, 250, 251, ${opacity})`;
+        }
+
+        function renderProductImagesList() {
+            const container = document.getElementById('product-images-list');
+            container.innerHTML = '';
+            
+            state.products.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-2 bg-white rounded border hover:bg-gray-50 transition cursor-pointer';
+                div.onclick = () => changeProductImageFromAdmin(product.id);
+                div.innerHTML = `
+                    <img src="${product.image}" class="product-image-preview">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-800 truncate">${product.name}</p>
+                        <p class="text-xs text-gray-500">Click to change image</p>
+                    </div>
+                    <i class="fas fa-camera text-gray-400"></i>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function changeProductImageFromAdmin(productId) {
+            state.currentEditProductId = productId;
+            document.getElementById('product-image-changer').click();
+        }
+
+        function changeProductImage(productId) {
+            state.currentEditProductId = productId;
+            document.getElementById('product-image-changer').click();
+        }
+
+        function handleProductImageChange(input) {
+            if (input.files && input.files[0] && state.currentEditProductId) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const product = state.products.find(p => p.id === state.currentEditProductId);
+                    if (product) {
+                        product.image = e.target.result;
+                        renderProducts();
+                        renderProductImagesList();
+                        
+                        // Update modal if open
+                        if (state.currentModalProduct && state.currentModalProduct.id === state.currentEditProductId) {
+                            document.getElementById('modal-img').src = e.target.result;
+                        }
+                        
+                        showToast('Product image updated!');
+                    }
+                    state.currentEditProductId = null;
+                    input.value = '';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function updateThemeColor(type, value) {
+            state.theme[type] = value;
+            
+            if (type === 'primary') {
+                document.documentElement.style.setProperty('--primary', value);
+                document.querySelectorAll('.bg-primary').forEach(el => el.style.backgroundColor = value);
+                document.querySelectorAll('.text-primary').forEach(el => el.style.color = value);
+                document.querySelectorAll('.border-primary').forEach(el => el.style.borderColor = value);
+                document.getElementById('primary-color-value').innerText = value;
+            } else if (type === 'secondary') {
+                document.querySelectorAll('.hover\\:bg-secondary').forEach(el => {
+                    el.onmouseenter = () => el.style.backgroundColor = value;
+                    el.onmouseleave = () => el.style.backgroundColor = state.theme.primary;
+                });
+                document.getElementById('secondary-color-value').innerText = value;
+            } else if (type === 'bg') {
+                document.body.style.backgroundColor = value;
+                document.getElementById('bg-color-value').innerText = value;
+            }
+            showToast('Theme updated!');
+        }
+
+        function updateHeroOpacity(value) {
+            state.theme.heroOpacity = value;
+            document.getElementById('hero-overlay').style.backgroundColor = `rgba(0, 0, 0, ${value / 100})`;
+        }
+
+        function applyTheme() {
+            updateThemeColor('primary', state.theme.primary);
+            updateThemeColor('secondary', state.theme.secondary);
+            updateHeroOpacity(state.theme.heroOpacity);
+            updateShopOverlay();
+        }
+
+        function resetTheme() {
+            state.theme = {
+                primary: "#064e3b",
+                secondary: "#065f46",
+                bg: "#f9fafb",
+                heroOpacity: 40,
+                shopOpacity: 92,
+                shopBgEnabled: false
+            };
+            state.images.shop = "";
+            document.getElementById('shop').style.backgroundImage = 'none';
+            loadContentToInputs();
+            applyTheme();
+            showToast('Theme reset to default!');
+        }
+
+        function renderProducts(filter = 'all') {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' 
+                ? state.products 
+                : state.products.filter(p => p.category === filter);
+
+            filtered.forEach((product, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl overflow-hidden shadow-lg card-hover transition duration-300 flex flex-col h-full gs-reveal-up';
+                card.style.animationDelay = `${index * 100}ms`;
+                
+                const editClass = state.isAdmin ? 'admin-editable' : '';
+
+                card.innerHTML = `
+                    <div class="relative h-64 overflow-hidden group cursor-pointer" onclick="openProductModal(${product.id})">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition duration-300 flex items-center justify-center">
+                            <span class="text-white border border-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-4 group-hover:translate-y-0">Quick View</span>
+                        </div>
+                        ${state.isAdmin ? `<div class="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold" onclick="event.stopPropagation(); changeProductImage(${product.id})"><i class="fas fa-camera"></i> Change Img</div>` : ''}
+                        <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-primary shadow-md uppercase tracking-wider ${state.isAdmin ? 'mt-8' : ''}">
+                            ${product.category}
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-serif font-bold text-gray-800 ${editClass}" onclick="state.isAdmin ? editProductText(${product.id}, 'name') : null">${product.name}</h3>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-4 flex-1 ${editClass}" onclick="state.isAdmin ? editProductText(${product.id}, 'desc') : null">${product.desc}</p>
+                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-2xl font-bold text-primary ${editClass}" onclick="state.isAdmin ? editProductPrice(${product.id}) : null">Rs. ${product.price.toLocaleString()}</span>
+                            <button onclick="addToCart(${product.id})" class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md transform active:scale-90">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('text-primary');
+            });
+            event.target.classList.remove('text-primary');
+            event.target.classList.add('bg-primary', 'text-white');
+            
+            renderProducts(category);
+        }
+
+        function editProductText(id, field) {
+            const product = state.products.find(p => p.id === id);
+            const newVal = prompt(`Edit ${field}:`, product[field]);
+            if (newVal !== null) {
+                product[field] = newVal;
+                renderProducts();
+                renderProductImagesList();
+                showToast('Product updated!');
+            }
+        }
+
+        function editProductPrice(id) {
+            const product = state.products.find(p => p.id === id);
+            const newVal = prompt("Edit Price (LKR):", product.price);
+            if (newVal !== null && !isNaN(newVal)) {
+                product.price = parseInt(newVal);
+                renderProducts();
+                showToast('Price updated!');
+            }
+        }
+
+        function addNewProduct() {
+            const name = prompt("Product Name:");
+            if(!name) return;
+            const price = prompt("Price (LKR):");
+            if(!price) return;
+            const category = prompt("Category (love/birthday/wedding/sympathy):", "love");
+            
+            const newProduct = {
+                id: Date.now(),
+                name: name,
+                price: parseInt(price),
+                category: category || 'love',
+                image: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?q=80&w=800&auto=format&fit=crop',
+                desc: 'New product description.'
+            };
+            
+            state.products.push(newProduct);
+            renderProducts();
+            renderProductImagesList();
+            showToast('New Product Added!');
+        }
+
+        function openProductModal(id) {
+            if(state.isAdmin && event.target.closest('.bg-yellow-400')) return;
+            
+            const product = state.products.find(p => p.id === id);
+            state.currentModalProduct = product;
+            state.currentModalQty = 1;
+
+            document.getElementById('modal-img').src = product.image;
+            document.getElementById('modal-title').innerText = product.name;
+            document.getElementById('modal-price').innerText = `Rs. ${product.price.toLocaleString()}`;
+            document.getElementById('modal-desc').innerText = product.desc;
+            document.getElementById('modal-qty').innerText = 1;
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function adjustModalQty(change) {
+            const newQty = state.currentModalQty + change;
+            if (newQty >= 1) {
+                state.currentModalQty = newQty;
+                document.getElementById('modal-qty').innerText = newQty;
+            }
+        }
+
+        function addToCartFromModal() {
+            if (!state.currentModalProduct) return;
+            
+            for(let i=0; i<state.currentModalQty; i++) {
+                addToCart(state.currentModalProduct.id, false);
+            }
+            closeProductModal();
+            showToast(`Added ${state.currentModalQty} items to cart`);
+        }
+
+        function addToCart(id, showMsg = true) {
+            const product = state.products.find(p => p.id === id);
+            state.cart.push(product);
+            updateCartCount();
+            renderCartItems();
+            if(showMsg) showToast('Added to cart');
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').innerText = state.cart.length;
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+                renderCartItems();
+            } else {
+                drawer.classList.add('translate-x-full');
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+            
+            if (state.cart.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 mt-10 flex flex-col items-center"><i class="fas fa-shopping-basket text-4xl mb-2 opacity-20"></i>Your cart is empty</div>';
+                document.getElementById('cart-total').innerText = 'Rs. 0.00';
+                return;
+            }
+
+            let total = 0;
+            const counts = {};
+            state.cart.forEach(x => { counts[x.id] = (counts[x.id] || 0) + 1; });
+            const uniqueIds = Object.keys(counts);
+
+            uniqueIds.forEach(id => {
+                const product = state.products.find(p => p.id == id);
+                const qty = counts[id];
+                const itemTotal = product.price * qty;
+                total += itemTotal;
+
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-4 bg-gray-50 p-3 rounded-lg';
+                div.innerHTML = `
+                    <img src="${product.image}" class="w-16 h-16 rounded object-cover">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-sm text-gray-800">${product.name}</h4>
+                        <p class="text-xs text-gray-500">Rs. ${product.price.toLocaleString()} x ${qty}</p>
+                    </div>
+                    <button onclick="removeFromCart(${id})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('cart-total').innerText = `Rs. ${total.toLocaleString()}`;
+        }
+
+        function removeFromCart(id) {
+            const index = state.cart.findIndex(p => p.id === id);
+            if (index > -1) {
+                state.cart.splice(index, 1);
+                updateCartCount();
+                renderCartItems();
+            }
+        }
+
+        function checkout() {
+            if (state.cart.length === 0) return;
+            
+            let message = `Hello SunShine Creation! ${state.links.whatsapp_msg}%0A%0AI would like to order:%0A%0A`;
+            const counts = {};
+            state.cart.forEach(x => { counts[x.id] = (counts[x.id] || 0) + 1; });
+            
+            Object.keys(counts).forEach(id => {
+                const product = state.products.find(p => p.id == id);
+                message += `- ${product.name} (Qty: ${counts[id]})%0A`;
+            });
+            
+            const total = state.cart.reduce((sum, item) => sum + item.price, 0);
+            message += `%0ATotal: Rs. ${total.toLocaleString()}`;
+            
+            window.open(`https://wa.me/${state.links.whatsapp}?text=${message}`, '_blank');
+        }
+
+        function toggleAdminLogin() {
+            const modal = document.getElementById('admin-modal');
+            const content = document.getElementById('admin-modal-content');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
+            
+            if (user === 'admin' && pass === 'admin') {
+                state.isAdmin = true;
+                toggleAdminLogin();
+                document.getElementById('admin-panel').classList.remove('translate-x-full');
+                renderProducts();
+                showToast('Welcome to Admin Panel!');
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        function toggleAdminMode() {
+            state.isAdmin = false;
+            document.getElementById('admin-panel').classList.add('translate-x-full');
+            renderProducts();
+            showToast('Admin Mode Deactivated');
+        }
+
+        function switchAdminTab(tabName) {
+            document.getElementById('panel-content').classList.add('hidden');
+            document.getElementById('panel-images').classList.add('hidden');
+            document.getElementById('panel-appearance').classList.add('hidden');
+            document.getElementById('panel-links').classList.add('hidden');
+            
+            document.getElementById('tab-content').classList.remove('active');
+            document.getElementById('tab-images').classList.remove('active');
+            document.getElementById('tab-appearance').classList.remove('active');
+            document.getElementById('tab-links').classList.remove('active');
+            
+            document.getElementById(`panel-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function resetAllData() {
+            if(confirm("WARNING: This will reset ALL changes including content, colors, images, and links. Continue?")) {
+                location.reload();
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function changeLanguage(lang) {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+                select.value = lang;
+                select.dispatchEvent(new Event('change'));
+            }
+            document.getElementById('current-lang').innerText = lang.toUpperCase();
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast('Message Sent Successfully!');
+            e.target.reset();
+        }
+
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            gsap.utils.toArray('.gs-reveal-up').forEach(element => {
+                gsap.fromTo(element, 
+                    { y: 50, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", scrollTrigger: { trigger: element, start: "top 85%" } }
+                );
+            });
+
+            gsap.utils.toArray('.gs-reveal').forEach(element => {
+                gsap.fromTo(element, 
+                    { opacity: 0, scale: 0.95 },
+                    { opacity: 1, scale: 1, duration: 1, ease: "power2.out", scrollTrigger: { trigger: element, start: "top 80%" } }
+                );
+            });
+            
+            gsap.from(".gs-reveal-left", { x: -50, opacity: 0, duration: 1, scrollTrigger: { trigger: ".gs-reveal-left", start: "top 75%" } });
+            gsap.from(".gs-reveal-right", { x: 50, opacity: 0, duration: 1, scrollTrigger: { trigger: ".gs-reveal-right", start: "top 75%" } });
+        }
+    </script>
+</body>
+</html>
