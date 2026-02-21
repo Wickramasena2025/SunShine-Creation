@@ -113,16 +113,16 @@
         }
 
         .image-preview {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 120px;
             object-fit: cover;
             border-radius: 8px;
             border: 2px dashed #ccc;
         }
 
         .product-image-preview {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             object-fit: cover;
             border-radius: 4px;
             border: 1px solid #ddd;
@@ -146,11 +146,19 @@
         .shop-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(249, 250, 251, 0.92);
+        }
+
+        /* Save indicator animation */
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        }
+        .save-indicator {
+            animation: pulse-green 2s infinite;
         }
     </style>
 </head>
-<body class="font-sans text-gray-800 bg-cream antialiased overflow-x-hidden">
+<body class="font-sans text-gray-800 antialiased overflow-x-hidden" id="main-body">
 
     <!-- Loading Screen -->
     <div id="loader">
@@ -239,370 +247,277 @@
         </div>
     </div>
 
-    <!-- Enhanced Admin Panel -->
-    <div id="admin-panel" class="fixed right-0 top-0 w-96 bg-white shadow-2xl h-screen transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto border-l border-gray-200 flex flex-col">
-        <div class="p-6 bg-primary text-white">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold flex items-center gap-2">
+    <!-- Enhanced Admin Panel with Save Indicator -->
+    <div id="admin-panel" class="fixed right-0 top-0 w-96 bg-white shadow-2xl h-screen transform translate-x-full transition-transform duration-300 z-50 overflow-hidden border-l border-gray-200 flex flex-col">
+        <!-- Admin Header -->
+        <div class="p-4 bg-primary text-white flex-shrink-0">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-lg font-bold flex items-center gap-2">
                     <i class="fas fa-cog"></i> Admin Dashboard
                 </h2>
-                <button onclick="toggleAdminMode()" class="text-white hover:text-red-300 text-sm font-bold bg-white bg-opacity-20 px-3 py-1 rounded">
+                <button onclick="toggleAdminMode()" class="text-white hover:text-red-300 text-xs font-bold bg-white bg-opacity-20 px-2 py-1 rounded">
                     <i class="fas fa-sign-out-alt"></i> Exit
                 </button>
             </div>
-            <p class="text-xs text-green-100">Manage your website content, images, and appearance</p>
+            <div class="flex items-center justify-between">
+                <p class="text-xs text-green-100">Changes auto-save to browser</p>
+                <div id="save-status" class="flex items-center gap-1 text-xs bg-green-500 bg-opacity-30 px-2 py-1 rounded">
+                    <i class="fas fa-check"></i> Saved
+                </div>
+            </div>
         </div>
 
-        <div class="flex border-b border-gray-200">
-            <button onclick="switchAdminTab('content')" class="admin-tab active flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-content">
+        <!-- Admin Tabs -->
+        <div class="flex border-b border-gray-200 flex-shrink-0">
+            <button onclick="switchAdminTab('content')" class="admin-tab active flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-content">
                 <i class="fas fa-edit"></i> Content
             </button>
-            <button onclick="switchAdminTab('images')" class="admin-tab flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-images">
+            <button onclick="switchAdminTab('images')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-images">
                 <i class="fas fa-images"></i> Images
             </button>
-            <button onclick="switchAdminTab('appearance')" class="admin-tab flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-appearance">
+            <button onclick="switchAdminTab('products')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-products">
+                <i class="fas fa-box"></i> Products
+            </button>
+            <button onclick="switchAdminTab('appearance')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-appearance">
                 <i class="fas fa-paint-brush"></i> Theme
             </button>
-            <button onclick="switchAdminTab('links')" class="admin-tab flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50" id="tab-links">
+            <button onclick="switchAdminTab('links')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-links">
                 <i class="fas fa-link"></i> Links
             </button>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-6" id="admin-content">
+        <!-- Admin Content Area (Scrollable) -->
+        <div class="flex-1 overflow-y-auto p-4" id="admin-content">
             
             <!-- Content Tab -->
-            <div id="panel-content" class="space-y-6">
-                <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                    <h4 class="font-semibold text-green-800 mb-2"><i class="fas fa-info-circle"></i> Quick Edit</h4>
-                    <p class="text-xs text-green-700">Click on any text on the website to edit it directly, or use the fields below.</p>
+            <div id="panel-content" class="space-y-4">
+                <div class="bg-green-50 p-3 rounded-lg border border-green-100">
+                    <h4 class="font-semibold text-green-800 mb-1 text-sm"><i class="fas fa-info-circle"></i> Quick Edit</h4>
+                    <p class="text-xs text-green-700">All changes are automatically saved to your browser's storage.</p>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <!-- Hero Section -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
                         <i class="fas fa-home text-primary"></i> Hero Section
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Hero Title</label>
-                            <input type="text" id="edit-hero-title" onchange="updateContent('hero_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Hero Subtitle</label>
-                            <textarea id="edit-hero-subtitle" onchange="updateContent('hero_subtitle', this.value)" rows="2" class="w-full px-3 py-2 border rounded text-sm"></textarea>
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Button 1 Text</label>
-                            <input type="text" id="edit-btn1-text" onchange="updateContent('btn1_text', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Button 2 Text</label>
-                            <input type="text" id="edit-btn2-text" onchange="updateContent('btn2_text', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                    <div class="space-y-2">
+                        <input type="text" id="edit-hero-title" onchange="updateContent('hero_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Hero Title">
+                        <textarea id="edit-hero-subtitle" onchange="updateContent('hero_subtitle', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Hero Subtitle"></textarea>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="edit-btn1-text" onchange="updateContent('btn1_text', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Button 1 Text">
+                            <input type="text" id="edit-btn2-text" onchange="updateContent('btn2_text', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Button 2 Text">
                         </div>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <!-- Shop Section -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
                         <i class="fas fa-shopping-bag text-primary"></i> Shop Section
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Section Title</label>
-                            <input type="text" id="edit-shop-title" onchange="updateContent('shop_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                    </div>
+                    <input type="text" id="edit-shop-title" onchange="updateContent('shop_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Section Title">
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <!-- About Section -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
                         <i class="fas fa-info-circle text-primary"></i> About Section
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">About Title</label>
-                            <input type="text" id="edit-about-title" onchange="updateContent('about_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Paragraph 1</label>
-                            <textarea id="edit-about-p1" onchange="updateContent('about_p1', this.value)" rows="3" class="w-full px-3 py-2 border rounded text-sm"></textarea>
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Paragraph 2</label>
-                            <textarea id="edit-about-p2" onchange="updateContent('about_p2', this.value)" rows="3" class="w-full px-3 py-2 border rounded text-sm"></textarea>
-                        </div>
+                    <div class="space-y-2">
+                        <input type="text" id="edit-about-title" onchange="updateContent('about_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="About Title">
+                        <textarea id="edit-about-p1" onchange="updateContent('about_p1', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Paragraph 1"></textarea>
+                        <textarea id="edit-about-p2" onchange="updateContent('about_p2', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Paragraph 2"></textarea>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <!-- Contact Section -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
                         <i class="fas fa-address-card text-primary"></i> Contact Info
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Visit Us Title</label>
-                            <input type="text" id="edit-contact-visit-title" onchange="updateContent('contact_visit_title', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Address</label>
-                            <textarea id="edit-address" onchange="updateContent('contact_address', this.value)" rows="2" class="w-full px-3 py-2 border rounded text-sm"></textarea>
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Phone Number</label>
-                            <input type="text" id="edit-phone" onchange="updateContent('contact_phone', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Email</label>
-                            <input type="text" id="edit-email" onchange="updateContent('contact_email', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
+                    <div class="space-y-2">
+                        <input type="text" id="edit-contact-visit-title" onchange="updateContent('contact_visit_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Visit Us Title">
+                        <textarea id="edit-address" onchange="updateContent('contact_address', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Address"></textarea>
+                        <input type="text" id="edit-phone" onchange="updateContent('contact_phone', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Phone">
+                        <input type="text" id="edit-email" onchange="updateContent('contact_email', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Email">
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                <!-- Navigation -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
                         <i class="fas fa-bars text-primary"></i> Navigation
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Brand Name</label>
-                            <input type="text" id="edit-brand-name" onchange="updateContent('brand_name', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Home Menu</label>
-                            <input type="text" id="edit-nav-home" onchange="updateContent('nav_home', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Shop Menu</label>
-                            <input type="text" id="edit-nav-shop" onchange="updateContent('nav_shop', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">About Menu</label>
-                            <input type="text" id="edit-nav-about" onchange="updateContent('nav_about', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Contact Menu</label>
-                            <input type="text" id="edit-nav-contact" onchange="updateContent('nav_contact', this.value)" class="w-full px-3 py-2 border rounded text-sm">
+                    <div class="space-y-2">
+                        <input type="text" id="edit-brand-name" onchange="updateContent('brand_name', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Brand Name">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="edit-nav-home" onchange="updateContent('nav_home', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Home">
+                            <input type="text" id="edit-nav-shop" onchange="updateContent('nav_shop', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Shop">
+                            <input type="text" id="edit-nav-about" onchange="updateContent('nav_about', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="About">
+                            <input type="text" id="edit-nav-contact" onchange="updateContent('nav_contact', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Contact">
                         </div>
                     </div>
                 </div>
 
-                <button onclick="addNewProduct()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-bold shadow-md flex items-center justify-center gap-2">
-                    <i class="fas fa-plus"></i> Add New Product
-                </button>
-                
-                <button onclick="resetAllData()" class="w-full bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition font-bold shadow-md flex items-center justify-center gap-2">
-                    <i class="fas fa-trash"></i> Reset All Changes
-                </button>
+                <!-- Data Management -->
+                <div class="border-t pt-4 mt-4">
+                    <button onclick="exportData()" class="w-full bg-blue-500 text-white py-2 rounded text-xs font-bold mb-2 hover:bg-blue-600 transition">
+                        <i class="fas fa-download"></i> Export Data (Backup)
+                    </button>
+                    <label class="w-full bg-gray-500 text-white py-2 rounded text-xs font-bold mb-2 hover:bg-gray-600 transition flex items-center justify-center cursor-pointer">
+                        <i class="fas fa-upload"></i> Import Data
+                        <input type="file" id="import-file" accept=".json" onchange="importData(this)" class="hidden">
+                    </label>
+                    <button onclick="resetAllData()" class="w-full bg-red-500 text-white py-2 rounded text-xs font-bold hover:bg-red-600 transition">
+                        <i class="fas fa-trash"></i> Reset Everything
+                    </button>
+                </div>
             </div>
 
             <!-- Images Tab -->
-            <div id="panel-images" class="space-y-6 hidden">
-                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
-                    <h4 class="font-semibold text-purple-800 mb-2"><i class="fas fa-images"></i> Image Manager</h4>
-                    <p class="text-xs text-purple-700">Upload and change images for all sections. Click on any image on the website to change it directly.</p>
+            <div id="panel-images" class="space-y-4 hidden">
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-100">
+                    <h4 class="font-semibold text-purple-800 mb-1 text-sm"><i class="fas fa-images"></i> Image Manager</h4>
+                    <p class="text-xs text-purple-700">Click images to change. All images are saved to browser storage.</p>
                 </div>
 
                 <!-- Hero Image -->
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fas fa-image text-primary"></i> Hero Background
-                    </h3>
-                    <div class="space-y-3">
-                        <div class="relative">
-                            <img id="preview-hero-image" class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300">
-                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('hero-image-upload').click()">
-                                <span class="text-white font-semibold"><i class="fas fa-camera"></i> Change</span>
-                            </div>
-                        </div>
-                        <input type="file" id="hero-image-upload" accept="image/*" onchange="handleImageUpload(this, 'hero')" class="hidden">
-                        <p class="text-xs text-gray-500">Recommended: 1920x1080px or larger</p>
-                    </div>
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Hero Background</h3>
+                    <img id="preview-hero-image" class="image-preview mb-2 cursor-pointer" onclick="document.getElementById('hero-image-upload').click()">
+                    <input type="file" id="hero-image-upload" accept="image/*" onchange="handleImageUpload(this, 'hero')" class="hidden">
+                    <p class="text-xs text-gray-500">Click image to change • 1920x1080px recommended</p>
                 </div>
 
-                <!-- Shop Collection Background -->
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fas fa-shopping-bag text-primary"></i> Shop Section Background
-                    </h3>
-                    <div class="space-y-3">
-                        <div class="relative">
-                            <img id="preview-shop-image" class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300">
-                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('shop-image-upload').click()">
-                                <span class="text-white font-semibold"><i class="fas fa-camera"></i> Change</span>
-                            </div>
-                        </div>
-                        <input type="file" id="shop-image-upload" accept="image/*" onchange="handleImageUpload(this, 'shop')" class="hidden">
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="shop-bg-enable" onchange="toggleShopBackground(this.checked)" class="rounded">
-                            <label class="text-sm text-gray-700">Enable background image (overlay will be applied)</label>
-                        </div>
-                        <p class="text-xs text-gray-500">Recommended: Subtle floral pattern or texture</p>
+                <!-- Shop Background -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Shop Section Background</h3>
+                    <img id="preview-shop-image" class="image-preview mb-2 cursor-pointer" onclick="document.getElementById('shop-image-upload').click()" style="background: #f3f4f6;">
+                    <input type="file" id="shop-image-upload" accept="image/*" onchange="handleImageUpload(this, 'shop')" class="hidden">
+                    <div class="flex items-center gap-2 mt-2">
+                        <input type="checkbox" id="shop-bg-enable" onchange="toggleShopBackground(this.checked)" class="rounded">
+                        <label class="text-xs text-gray-700">Enable background image</label>
                     </div>
                 </div>
 
                 <!-- About Image -->
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fas fa-user text-primary"></i> About Section Image
-                    </h3>
-                    <div class="space-y-3">
-                        <div class="relative">
-                            <img id="preview-about-image" class="w-full h-32 object-cover rounded-lg border-2 border-dashed border-gray-300">
-                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('about-image-upload').click()">
-                                <span class="text-white font-semibold"><i class="fas fa-camera"></i> Change</span>
-                            </div>
-                        </div>
-                        <input type="file" id="about-image-upload" accept="image/*" onchange="handleImageUpload(this, 'about')" class="hidden">
-                        <p class="text-xs text-gray-500">Recommended: 800x600px, portrait orientation</p>
-                    </div>
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">About Section Image</h3>
+                    <img id="preview-about-image" class="image-preview mb-2 cursor-pointer" onclick="document.getElementById('about-image-upload').click()">
+                    <input type="file" id="about-image-upload" accept="image/*" onchange="handleImageUpload(this, 'about')" class="hidden">
+                    <p class="text-xs text-gray-500">Click image to change • 800x600px recommended</p>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="panel-products" class="space-y-4 hidden">
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                    <h4 class="font-semibold text-blue-800 mb-1 text-sm"><i class="fas fa-box-open"></i> Product Manager</h4>
+                    <p class="text-xs text-blue-700">Click any product to edit its image, name, price, or description.</p>
                 </div>
 
-                <!-- Product Images Manager -->
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fas fa-box-open text-primary"></i> Product Images
-                    </h3>
-                    <div class="space-y-2 max-h-64 overflow-y-auto" id="product-images-list">
-                        <!-- Product list injected here -->
-                    </div>
+                <button onclick="addNewProduct()" class="w-full bg-primary text-white py-2 rounded text-xs font-bold hover:bg-secondary transition mb-2">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+
+                <div id="admin-products-list" class="space-y-2 max-h-96 overflow-y-auto">
+                    <!-- Products injected here -->
                 </div>
             </div>
 
             <!-- Appearance Tab -->
-            <div id="panel-appearance" class="space-y-6 hidden">
-                <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <h4 class="font-semibold text-blue-800 mb-2"><i class="fas fa-palette"></i> Theme Colors</h4>
-                    <p class="text-xs text-blue-700">Change the main colors of your website.</p>
+            <div id="panel-appearance" class="space-y-4 hidden">
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                    <h4 class="font-semibold text-blue-800 mb-1 text-sm"><i class="fas fa-palette"></i> Theme Colors</h4>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Primary Color (Dark Green)</h3>
-                    <div class="flex items-center gap-4">
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Primary Color</h3>
+                    <div class="flex items-center gap-3">
                         <input type="color" id="primary-color-picker" value="#064e3b" onchange="updateThemeColor('primary', this.value)">
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-600">Current: <span id="primary-color-value">#064e3b</span></p>
-                            <p class="text-xs text-gray-400">Used for headers, buttons, and navigation</p>
-                        </div>
+                        <span class="text-xs text-gray-600" id="primary-color-value">#064e3b</span>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Secondary Color</h3>
-                    <div class="flex items-center gap-4">
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Secondary Color</h3>
+                    <div class="flex items-center gap-3">
                         <input type="color" id="secondary-color-picker" value="#065f46" onchange="updateThemeColor('secondary', this.value)">
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-600">Current: <span id="secondary-color-value">#065f46</span></p>
-                            <p class="text-xs text-gray-400">Used for hover states and accents</p>
-                        </div>
+                        <span class="text-xs text-gray-600" id="secondary-color-value">#065f46</span>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Page Background</h3>
-                    <div class="flex items-center gap-4">
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Background Color</h3>
+                    <div class="flex items-center gap-3">
                         <input type="color" id="bg-color-picker" value="#f9fafb" onchange="updateThemeColor('bg', this.value)">
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-600">Current: <span id="bg-color-value">#f9fafb</span></p>
-                        </div>
+                        <span class="text-xs text-gray-600" id="bg-color-value">#f9fafb</span>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Hero Overlay Darkness</h3>
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Hero Overlay</h3>
                     <input type="range" id="hero-opacity" min="0" max="90" value="40" oninput="updateHeroOpacity(this.value)" class="w-full">
-                    <p class="text-xs text-gray-500 mt-1">Adjust the dark overlay on the hero image</p>
+                    <p class="text-xs text-gray-500 mt-1">Darkness: <span id="hero-opacity-value">40%</span></p>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Shop Overlay Opacity</h3>
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Shop Overlay</h3>
                     <input type="range" id="shop-opacity" min="0" max="95" value="92" oninput="updateShopOpacity(this.value)" class="w-full">
-                    <p class="text-xs text-gray-500 mt-1">Adjust overlay when shop background is enabled</p>
+                    <p class="text-xs text-gray-500 mt-1">Opacity: <span id="shop-opacity-value">92%</span></p>
                 </div>
 
-                <button onclick="resetTheme()" class="w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition font-bold shadow-md">
+                <button onclick="resetTheme()" class="w-full bg-gray-500 text-white py-2 rounded text-xs font-bold hover:bg-gray-600 transition">
                     Reset to Default Theme
                 </button>
             </div>
 
             <!-- Links Tab -->
-            <div id="panel-links" class="space-y-6 hidden">
-                <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
-                    <h4 class="font-semibold text-purple-800 mb-2"><i class="fas fa-link"></i> Social & Contact Links</h4>
-                    <p class="text-xs text-purple-700">Update your social media and contact links.</p>
+            <div id="panel-links" class="space-y-4 hidden">
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-100">
+                    <h4 class="font-semibold text-purple-800 mb-1 text-sm"><i class="fas fa-link"></i> Social & Contact Links</h4>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fab fa-whatsapp text-green-500"></i> WhatsApp Settings
+                <!-- WhatsApp -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
+                        <i class="fab fa-whatsapp text-green-500"></i> WhatsApp
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">WhatsApp Number (with country code)</label>
-                            <input type="text" id="edit-whatsapp-num" placeholder="94785391995" onchange="updateLink('whatsapp', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Default Message</label>
-                            <input type="text" id="edit-whatsapp-msg" value="Hello! I'm interested in your flowers." onchange="updateLink('whatsapp_msg', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="show-whatsapp-btn" checked onchange="toggleFloatingButton('whatsapp', this.checked)" class="rounded">
-                            <label class="text-sm text-gray-700">Show floating WhatsApp button</label>
-                        </div>
+                    <input type="text" id="edit-whatsapp-num" onchange="updateLink('whatsapp', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="94771234567">
+                    <input type="text" id="edit-whatsapp-msg" onchange="updateLink('whatsapp_msg', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="Default message">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="show-whatsapp-btn" onchange="toggleFloatingButton('whatsapp', this.checked)" class="rounded">
+                        <label class="text-xs text-gray-700">Show floating button</label>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fab fa-facebook text-blue-600"></i> Facebook Settings
+                <!-- Facebook -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
+                        <i class="fab fa-facebook text-blue-600"></i> Facebook
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Facebook Page URL</label>
-                            <input type="url" id="edit-facebook-url" placeholder="https://facebook.com/yourpage" onchange="updateLink('facebook', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="show-facebook-btn" onchange="toggleFloatingButton('facebook', this.checked)" class="rounded">
-                            <label class="text-sm text-gray-700">Show floating Facebook button</label>
-                        </div>
+                    <input type="url" id="edit-facebook-url" onchange="updateLink('facebook', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="https://facebook.com/yourpage">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="show-facebook-btn" onchange="toggleFloatingButton('facebook', this.checked)" class="rounded">
+                        <label class="text-xs text-gray-700">Show floating button</label>
                     </div>
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
-                        <i class="fab fa-instagram text-pink-600"></i> Instagram Settings
+                <!-- Instagram -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
+                        <i class="fab fa-instagram text-pink-600"></i> Instagram
                     </h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Instagram URL</label>
-                            <input type="url" id="edit-instagram-url" placeholder="https://instagram.com/yourhandle" onchange="updateLink('instagram', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                    </div>
+                    <input type="url" id="edit-instagram-url" onchange="updateLink('instagram', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="https://instagram.com/yourhandle">
                 </div>
 
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Hero Button Links</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Button 1 Link (Order Now)</label>
-                            <select id="edit-btn1-link" onchange="updateLink('btn1_link', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                                <option value="#shop">Shop Section</option>
-                                <option value="#contact">Contact Section</option>
-                                <option value="https://wa.me/">WhatsApp Direct</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-gray-600">Button 2 Link (WhatsApp)</label>
-                            <input type="text" id="edit-btn2-link" onchange="updateLink('btn2_link', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-3">Footer Social Links</h3>
-                    <div class="space-y-3">
-                        <input type="url" id="edit-footer-fb" placeholder="Facebook URL" onchange="updateLink('footer_fb', this.value)" class="w-full px-3 py-2 border rounded text-sm mb-2">
-                        <input type="url" id="edit-footer-ig" placeholder="Instagram URL" onchange="updateLink('footer_ig', this.value)" class="w-full px-3 py-2 border rounded text-sm mb-2">
-                        <input type="url" id="edit-footer-wa" placeholder="WhatsApp URL" onchange="updateLink('footer_wa', this.value)" class="w-full px-3 py-2 border rounded text-sm">
-                    </div>
+                <!-- Footer Links -->
+                <div class="border rounded-lg p-3 bg-gray-50">
+                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Footer Social Links</h3>
+                    <input type="url" id="edit-footer-fb" onchange="updateLink('footer_fb', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="Facebook URL">
+                    <input type="url" id="edit-footer-ig" onchange="updateLink('footer_ig', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="Instagram URL">
+                    <input type="url" id="edit-footer-wa" onchange="updateLink('footer_wa', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="WhatsApp URL">
                 </div>
             </div>
         </div>
@@ -623,7 +538,7 @@
                 <a href="#shop" id="hero-btn1" class="px-8 py-4 bg-primary hover:bg-secondary text-white font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn1_text">
                     Order Now <i class="fas fa-arrow-right"></i>
                 </a>
-                <a href="https://wa.me/94785391995" id="hero-btn2" target="_blank" class="px-8 py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn2_text">
+                <a href="https://wa.me/94771234567" id="hero-btn2" target="_blank" class="px-8 py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn2_text">
                     <i class="fab fa-whatsapp text-xl"></i> WhatsApp Us
                 </a>
             </div>
@@ -663,7 +578,7 @@
         </div>
     </section>
 
-    <!-- Shop Section with Background Image Support -->
+    <!-- Shop Section -->
     <section id="shop" class="relative py-20 shop-pattern" style="background-image: none;">
         <div class="shop-overlay" id="shop-overlay" style="background: rgba(249, 250, 251, 1);"></div>
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -748,7 +663,7 @@
                         </div>
                         <div>
                             <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_call_title">Call Us</h4>
-                            <p class="text-green-100 editable-content" data-key="contact_phone">+94 78 539 1995</p>
+                            <p class="text-green-100 editable-content" data-key="contact_phone">+94 77 123 4567</p>
                             <p class="text-green-100 text-sm mt-1 editable-content" data-key="contact_hours">Mon - Sat: 9:00 AM - 6:00 PM</p>
                         </div>
                     </div>
@@ -855,7 +770,7 @@
 
     <!-- Floating Buttons -->
     <div id="floating-buttons" class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <a id="float-whatsapp" href="https://wa.me/94785391995" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 animate-pulse">
+        <a id="float-whatsapp" href="https://wa.me/94771234567" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 animate-pulse">
             <i class="fab fa-whatsapp text-3xl"></i>
         </a>
         <a id="float-facebook" href="https://facebook.com" target="_blank" class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-700 transition transform hover:scale-110 hidden">
@@ -875,7 +790,7 @@
                             <div class="rounded-lg overflow-hidden h-64 md:h-auto relative group">
                                 <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer" onclick="if(state.isAdmin) changeProductImage(state.currentModalProduct.id)">
-                                    <span class="text-white font-bold"><i class="fas fa-camera"></i> Change Image</span>
+                                    <span class="text-white font-bold text-sm"><i class="fas fa-camera"></i> Change Image</span>
                                 </div>
                             </div>
                             <div class="flex flex-col justify-center">
@@ -938,10 +853,14 @@
     <input type="file" id="product-image-changer" accept="image/*" class="hidden" onchange="handleProductImageChange(this)">
 
     <script>
-        const state = {
-            isAdmin: false,
-            cart: [],
-            currentEditProductId: null,
+        // ==========================================
+        // LOCAL STORAGE MANAGEMENT
+        // ==========================================
+        
+        const STORAGE_KEY = 'sunshine_creation_data';
+        
+        // Default data (factory settings)
+        const defaultData = {
             content: {
                 hero_welcome: "Welcome to SunShine Creation",
                 hero_title: "Fresh Flowers for Every Moment",
@@ -972,7 +891,7 @@
                 contact_visit_title: "Visit Us",
                 contact_address: "123 Flower Road, Colombo 07, Sri Lanka",
                 contact_call_title: "Call Us",
-                contact_phone: "+94 78 539 1995",
+                contact_phone: "+94 77 123 4567",
                 contact_hours: "Mon - Sat: 9:00 AM - 6:00 PM",
                 contact_email_title: "Email Us",
                 contact_email: "hello@sunshinecreation.lk",
@@ -995,12 +914,12 @@
                 footer_terms: "Terms of Service"
             },
             links: {
-                whatsapp: "94785391995",
+                whatsapp: "94771234567",
                 whatsapp_msg: "Hello! I'm interested in your flowers.",
                 facebook: "https://facebook.com",
                 instagram: "https://instagram.com",
                 btn1_link: "#shop",
-                btn2_link: "https://wa.me/94785391995",
+                btn2_link: "https://wa.me/94771234567",
                 footer_fb: "#",
                 footer_ig: "#",
                 footer_wa: "#"
@@ -1071,12 +990,80 @@
                     image: "https://images.unsplash.com/photo-1523694576729-dc99e9c0f9b4?q=80&w=800&auto=format&fit=crop",
                     desc: "Exotic birds of paradise and orchids for a unique and vibrant gift."
                 }
-            ],
-            currentModalProduct: null,
-            currentModalQty: 1
+            ]
         };
 
+        // Current state (loaded from localStorage or defaults)
+        let state = {
+            isAdmin: false,
+            cart: [],
+            currentModalProduct: null,
+            currentModalQty: 1,
+            currentEditProductId: null
+        };
+
+        // Load data from localStorage
+        function loadFromStorage() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    // Merge with defaults to ensure all keys exist
+                    return {
+                        content: { ...defaultData.content, ...parsed.content },
+                        links: { ...defaultData.links, ...parsed.links },
+                        images: { ...defaultData.images, ...parsed.images },
+                        theme: { ...defaultData.theme, ...parsed.theme },
+                        buttons: { ...defaultData.buttons, ...parsed.buttons },
+                        products: parsed.products || defaultData.products
+                    };
+                }
+            } catch (e) {
+                console.error('Error loading from storage:', e);
+            }
+            return JSON.parse(JSON.stringify(defaultData)); // Deep copy defaults
+        }
+
+        // Save data to localStorage
+        function saveToStorage() {
+            try {
+                const dataToSave = {
+                    content: appData.content,
+                    links: appData.links,
+                    images: appData.images,
+                    theme: appData.theme,
+                    buttons: appData.buttons,
+                    products: appData.products
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+                
+                // Visual feedback
+                showSaveIndicator();
+            } catch (e) {
+                console.error('Error saving to storage:', e);
+                showToast('Error saving changes!');
+            }
+        }
+
+        // Show save indicator in admin panel
+        function showSaveIndicator() {
+            const indicator = document.getElementById('save-status');
+            indicator.innerHTML = '<i class="fas fa-check"></i> Saved';
+            indicator.classList.add('save-indicator');
+            setTimeout(() => {
+                indicator.classList.remove('save-indicator');
+            }, 2000);
+        }
+
+        // Global app data
+        let appData = loadFromStorage();
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Remove loader
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
@@ -1084,54 +1071,108 @@
                 initAnimations();
             }, 1500);
 
+            // Initialize everything
+            applyAllData();
             renderProducts();
             updateCartCount();
-            loadContentToInputs();
-            applyTheme();
-            applyLinks();
-            renderProductImagesList();
+            renderAdminProductsList();
             
+            // Google Translate
             window.googleTranslateElementInit = () => {
                 new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,si,ta', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
             };
-            
             const script = document.createElement('script');
             script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
             document.head.appendChild(script);
         });
 
-        function loadContentToInputs() {
-            Object.keys(state.content).forEach(key => {
-                const input = document.getElementById(`edit-${key.replace(/_/g, '-')}`);
-                if (input) input.value = state.content[key];
+        // Apply all saved data to the page
+        function applyAllData() {
+            // Apply content
+            Object.keys(appData.content).forEach(key => {
+                const elements = document.querySelectorAll(`[data-key="${key}"]`);
+                elements.forEach(el => {
+                    const icon = el.querySelector('i');
+                    if (icon && el.innerHTML.includes('class="')) {
+                        // Preserve icon for buttons
+                        const text = appData.content[key];
+                        el.innerHTML = text + ' ' + icon.outerHTML;
+                    } else {
+                        el.innerText = appData.content[key];
+                    }
+                });
             });
-            
-            document.getElementById('edit-whatsapp-num').value = state.links.whatsapp;
-            document.getElementById('edit-whatsapp-msg').value = state.links.whatsapp_msg;
-            document.getElementById('edit-facebook-url').value = state.links.facebook;
-            document.getElementById('edit-instagram-url').value = state.links.instagram;
-            document.getElementById('edit-btn2-link').value = state.links.btn2_link;
-            document.getElementById('edit-footer-fb').value = state.links.footer_fb;
-            document.getElementById('edit-footer-ig').value = state.links.footer_ig;
-            document.getElementById('edit-footer-wa').value = state.links.footer_wa;
-            
-            document.getElementById('primary-color-picker').value = state.theme.primary;
-            document.getElementById('secondary-color-picker').value = state.theme.secondary;
-            document.getElementById('bg-color-picker').value = state.theme.bg;
-            document.getElementById('hero-opacity').value = state.theme.heroOpacity;
-            document.getElementById('shop-opacity').value = state.theme.shopOpacity;
-            
-            // Set image previews
-            document.getElementById('preview-hero-image').src = state.images.hero;
-            document.getElementById('preview-about-image').src = state.images.about;
-            if (state.images.shop) {
-                document.getElementById('preview-shop-image').src = state.images.shop;
-                document.getElementById('shop-bg-enable').checked = state.theme.shopBgEnabled;
-            }
+
+            // Apply links
+            applyLinks();
+
+            // Apply images
+            applyImages();
+
+            // Apply theme
+            applyTheme();
+
+            // Apply button visibility
+            toggleFloatingButton('whatsapp', appData.buttons.showWhatsapp);
+            toggleFloatingButton('facebook', appData.buttons.showFacebook);
+            document.getElementById('show-whatsapp-btn').checked = appData.buttons.showWhatsapp;
+            document.getElementById('show-facebook-btn').checked = appData.buttons.showFacebook;
+
+            // Load values into admin inputs
+            loadAdminValues();
         }
 
+        // Load values into admin panel inputs
+        function loadAdminValues() {
+            // Content
+            Object.keys(appData.content).forEach(key => {
+                const input = document.getElementById(`edit-${key.replace(/_/g, '-')}`);
+                if (input) input.value = appData.content[key];
+            });
+
+            // Links
+            document.getElementById('edit-whatsapp-num').value = appData.links.whatsapp;
+            document.getElementById('edit-whatsapp-msg').value = appData.links.whatsapp_msg;
+            document.getElementById('edit-facebook-url').value = appData.links.facebook;
+            document.getElementById('edit-instagram-url').value = appData.links.instagram;
+            document.getElementById('edit-btn2-link').value = appData.links.btn2_link;
+            document.getElementById('edit-footer-fb').value = appData.links.footer_fb;
+            document.getElementById('edit-footer-ig').value = appData.links.footer_ig;
+            document.getElementById('edit-footer-wa').value = appData.links.footer_wa;
+
+            // Theme colors
+            document.getElementById('primary-color-picker').value = appData.theme.primary;
+            document.getElementById('secondary-color-picker').value = appData.theme.secondary;
+            document.getElementById('bg-color-picker').value = appData.theme.bg;
+            document.getElementById('hero-opacity').value = appData.theme.heroOpacity;
+            document.getElementById('shop-opacity').value = appData.theme.shopOpacity;
+            document.getElementById('shop-bg-enable').checked = appData.theme.shopBgEnabled;
+
+            // Image previews
+            document.getElementById('preview-hero-image').src = appData.images.hero;
+            document.getElementById('preview-about-image').src = appData.images.about;
+            if (appData.images.shop) {
+                document.getElementById('preview-shop-image').src = appData.images.shop;
+            } else {
+                document.getElementById('preview-shop-image').style.background = '#f3f4f6';
+            }
+
+            // Update display values
+            document.getElementById('primary-color-value').innerText = appData.theme.primary;
+            document.getElementById('secondary-color-value').innerText = appData.theme.secondary;
+            document.getElementById('bg-color-value').innerText = appData.theme.bg;
+            document.getElementById('hero-opacity-value').innerText = appData.theme.heroOpacity + '%';
+            document.getElementById('shop-opacity-value').innerText = appData.theme.shopOpacity + '%';
+        }
+
+        // ==========================================
+        // CONTENT MANAGEMENT
+        // ==========================================
+
         function updateContent(key, value) {
-            state.content[key] = value;
+            appData.content[key] = value;
+            
+            // Update all elements with this key
             document.querySelectorAll(`[data-key="${key}"]`).forEach(el => {
                 const icon = el.querySelector('i');
                 if (icon && el.innerHTML.includes('class="')) {
@@ -1140,138 +1181,104 @@
                     el.innerText = value;
                 }
             });
-            showToast('Content updated!');
+
+            saveToStorage();
+            showToast('Content saved!');
         }
 
         function updateLink(type, value) {
-            state.links[type] = value;
+            appData.links[type] = value;
             applyLinks();
-            showToast('Link updated!');
+            saveToStorage();
+            showToast('Link saved!');
         }
 
         function applyLinks() {
-            const waLink = `https://wa.me/${state.links.whatsapp}`;
+            const waLink = `https://wa.me/${appData.links.whatsapp}`;
             document.getElementById('float-whatsapp').href = waLink;
             document.getElementById('hero-btn2').href = waLink;
-            document.getElementById('social-wa').href = state.links.footer_wa || waLink;
-            document.getElementById('float-facebook').href = state.links.facebook;
-            document.getElementById('social-fb').href = state.links.footer_fb || state.links.facebook;
-            document.getElementById('social-ig').href = state.links.footer_ig || state.links.instagram;
-            document.getElementById('hero-btn1').href = state.links.btn1_link;
+            document.getElementById('social-wa').href = appData.links.footer_wa || waLink;
+            document.getElementById('float-facebook').href = appData.links.facebook;
+            document.getElementById('social-fb').href = appData.links.footer_fb || appData.links.facebook;
+            document.getElementById('social-ig').href = appData.links.footer_ig || appData.links.instagram;
+            document.getElementById('hero-btn1').href = appData.links.btn1_link;
         }
 
         function toggleFloatingButton(type, show) {
-            state.buttons[`show${type.charAt(0).toUpperCase() + type.slice(1)}`] = show;
+            appData.buttons[`show${type.charAt(0).toUpperCase() + type.slice(1)}`] = show;
             if (type === 'whatsapp') {
                 document.getElementById('float-whatsapp').style.display = show ? 'flex' : 'none';
             } else if (type === 'facebook') {
                 document.getElementById('float-facebook').classList.toggle('hidden', !show);
             }
+            saveToStorage();
         }
+
+        // ==========================================
+        // IMAGE MANAGEMENT
+        // ==========================================
 
         function handleImageUpload(input, type) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    state.images[type] = e.target.result;
+                    appData.images[type] = e.target.result;
                     
+                    // Update preview
                     const preview = document.getElementById(`preview-${type}-image`);
                     preview.src = e.target.result;
-                    
+                    preview.style.background = '';
+
+                    // Apply to page
                     if (type === 'hero') {
                         document.querySelector('.hero-pattern').style.backgroundImage = `url('${e.target.result}')`;
                     } else if (type === 'about') {
                         document.getElementById('about-image').src = e.target.result;
                     } else if (type === 'shop') {
                         document.getElementById('shop').style.backgroundImage = `url('${e.target.result}')`;
-                        state.theme.shopBgEnabled = true;
+                        appData.theme.shopBgEnabled = true;
                         document.getElementById('shop-bg-enable').checked = true;
                         updateShopOverlay();
                     }
-                    
-                    showToast('Image uploaded successfully!');
+
+                    saveToStorage();
+                    showToast('Image saved!');
                 };
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
         function toggleShopBackground(enabled) {
-            state.theme.shopBgEnabled = enabled;
+            appData.theme.shopBgEnabled = enabled;
             const shopSection = document.getElementById('shop');
-            if (enabled && state.images.shop) {
-                shopSection.style.backgroundImage = `url('${state.images.shop}')`;
+            if (enabled && appData.images.shop) {
+                shopSection.style.backgroundImage = `url('${appData.images.shop}')`;
             } else {
                 shopSection.style.backgroundImage = 'none';
             }
             updateShopOverlay();
+            saveToStorage();
         }
 
-        function updateShopOpacity(value) {
-            state.theme.shopOpacity = value;
-            updateShopOverlay();
-        }
-
-        function updateShopOverlay() {
-            const opacity = state.theme.shopOpacity / 100;
-            document.getElementById('shop-overlay').style.background = `rgba(249, 250, 251, ${opacity})`;
-        }
-
-        function renderProductImagesList() {
-            const container = document.getElementById('product-images-list');
-            container.innerHTML = '';
+        function applyImages() {
+            // Hero
+            document.querySelector('.hero-pattern').style.backgroundImage = `url('${appData.images.hero}')`;
             
-            state.products.forEach(product => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center gap-3 p-2 bg-white rounded border hover:bg-gray-50 transition cursor-pointer';
-                div.onclick = () => changeProductImageFromAdmin(product.id);
-                div.innerHTML = `
-                    <img src="${product.image}" class="product-image-preview">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-800 truncate">${product.name}</p>
-                        <p class="text-xs text-gray-500">Click to change image</p>
-                    </div>
-                    <i class="fas fa-camera text-gray-400"></i>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function changeProductImageFromAdmin(productId) {
-            state.currentEditProductId = productId;
-            document.getElementById('product-image-changer').click();
-        }
-
-        function changeProductImage(productId) {
-            state.currentEditProductId = productId;
-            document.getElementById('product-image-changer').click();
-        }
-
-        function handleProductImageChange(input) {
-            if (input.files && input.files[0] && state.currentEditProductId) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const product = state.products.find(p => p.id === state.currentEditProductId);
-                    if (product) {
-                        product.image = e.target.result;
-                        renderProducts();
-                        renderProductImagesList();
-                        
-                        // Update modal if open
-                        if (state.currentModalProduct && state.currentModalProduct.id === state.currentEditProductId) {
-                            document.getElementById('modal-img').src = e.target.result;
-                        }
-                        
-                        showToast('Product image updated!');
-                    }
-                    state.currentEditProductId = null;
-                    input.value = '';
-                };
-                reader.readAsDataURL(input.files[0]);
+            // About
+            document.getElementById('about-image').src = appData.images.about;
+            
+            // Shop
+            if (appData.theme.shopBgEnabled && appData.images.shop) {
+                document.getElementById('shop').style.backgroundImage = `url('${appData.images.shop}')`;
             }
         }
 
+        // ==========================================
+        // THEME MANAGEMENT
+        // ==========================================
+
         function updateThemeColor(type, value) {
-            state.theme[type] = value;
+            appData.theme[type] = value;
             
             if (type === 'primary') {
                 document.documentElement.style.setProperty('--primary', value);
@@ -1282,51 +1289,67 @@
             } else if (type === 'secondary') {
                 document.querySelectorAll('.hover\\:bg-secondary').forEach(el => {
                     el.onmouseenter = () => el.style.backgroundColor = value;
-                    el.onmouseleave = () => el.style.backgroundColor = state.theme.primary;
+                    el.onmouseleave = () => el.style.backgroundColor = appData.theme.primary;
                 });
                 document.getElementById('secondary-color-value').innerText = value;
             } else if (type === 'bg') {
                 document.body.style.backgroundColor = value;
                 document.getElementById('bg-color-value').innerText = value;
             }
-            showToast('Theme updated!');
+
+            saveToStorage();
+            showToast('Theme saved!');
         }
 
         function updateHeroOpacity(value) {
-            state.theme.heroOpacity = value;
+            appData.theme.heroOpacity = parseInt(value);
             document.getElementById('hero-overlay').style.backgroundColor = `rgba(0, 0, 0, ${value / 100})`;
+            document.getElementById('hero-opacity-value').innerText = value + '%';
+            saveToStorage();
+        }
+
+        function updateShopOpacity(value) {
+            appData.theme.shopOpacity = parseInt(value);
+            updateShopOverlay();
+            document.getElementById('shop-opacity-value').innerText = value + '%';
+            saveToStorage();
+        }
+
+        function updateShopOverlay() {
+            const opacity = appData.theme.shopOpacity / 100;
+            document.getElementById('shop-overlay').style.background = `rgba(249, 250, 251, ${opacity})`;
         }
 
         function applyTheme() {
-            updateThemeColor('primary', state.theme.primary);
-            updateThemeColor('secondary', state.theme.secondary);
-            updateHeroOpacity(state.theme.heroOpacity);
+            updateThemeColor('primary', appData.theme.primary);
+            updateThemeColor('secondary', appData.theme.secondary);
+            document.body.style.backgroundColor = appData.theme.bg;
+            document.getElementById('hero-overlay').style.backgroundColor = `rgba(0, 0, 0, ${appData.theme.heroOpacity / 100})`;
             updateShopOverlay();
         }
 
         function resetTheme() {
-            state.theme = {
-                primary: "#064e3b",
-                secondary: "#065f46",
-                bg: "#f9fafb",
-                heroOpacity: 40,
-                shopOpacity: 92,
-                shopBgEnabled: false
-            };
-            state.images.shop = "";
+            appData.theme = JSON.parse(JSON.stringify(defaultData.theme));
+            appData.images.shop = "";
             document.getElementById('shop').style.backgroundImage = 'none';
-            loadContentToInputs();
+            appData.theme.shopBgEnabled = false;
             applyTheme();
+            loadAdminValues();
+            saveToStorage();
             showToast('Theme reset to default!');
         }
+
+        // ==========================================
+        // PRODUCT MANAGEMENT
+        // ==========================================
 
         function renderProducts(filter = 'all') {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
 
             const filtered = filter === 'all' 
-                ? state.products 
-                : state.products.filter(p => p.category === filter);
+                ? appData.products 
+                : appData.products.filter(p => p.category === filter);
 
             filtered.forEach((product, index) => {
                 const card = document.createElement('div');
@@ -1341,7 +1364,7 @@
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition duration-300 flex items-center justify-center">
                             <span class="text-white border border-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-4 group-hover:translate-y-0">Quick View</span>
                         </div>
-                        ${state.isAdmin ? `<div class="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold" onclick="event.stopPropagation(); changeProductImage(${product.id})"><i class="fas fa-camera"></i> Change Img</div>` : ''}
+                        ${state.isAdmin ? `<div class="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold cursor-pointer" onclick="event.stopPropagation(); changeProductImage(${product.id})"><i class="fas fa-camera"></i> Change</div>` : ''}
                         <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-primary shadow-md uppercase tracking-wider ${state.isAdmin ? 'mt-8' : ''}">
                             ${product.category}
                         </div>
@@ -1353,13 +1376,36 @@
                         <p class="text-gray-500 text-sm mb-4 flex-1 ${editClass}" onclick="state.isAdmin ? editProductText(${product.id}, 'desc') : null">${product.desc}</p>
                         <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
                             <span class="text-2xl font-bold text-primary ${editClass}" onclick="state.isAdmin ? editProductPrice(${product.id}) : null">Rs. ${product.price.toLocaleString()}</span>
-                            <button onclick="addToCart(${product.id})" class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md transform active:scale-90">
+                            <button onclick="event.stopPropagation(); addToCart(${product.id})" class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md transform active:scale-90">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
                 `;
                 grid.appendChild(card);
+            });
+        }
+
+        function renderAdminProductsList() {
+            const container = document.getElementById('admin-products-list');
+            container.innerHTML = '';
+            
+            appData.products.forEach(product => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-2 bg-white rounded border hover:shadow-md transition cursor-pointer group';
+                div.innerHTML = `
+                    <img src="${product.image}" class="product-image-preview cursor-pointer" onclick="changeProductImage(${product.id})" title="Click to change image">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-800 truncate">${product.name}</p>
+                        <p class="text-xs text-gray-500">Rs. ${product.price.toLocaleString()} • ${product.category}</p>
+                    </div>
+                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+                        <button onclick="editProductText(${product.id}, 'name')" class="p-1 text-blue-500 hover:bg-blue-50 rounded" title="Edit name"><i class="fas fa-edit"></i></button>
+                        <button onclick="editProductPrice(${product.id})" class="p-1 text-green-500 hover:bg-green-50 rounded" title="Edit price"><i class="fas fa-tag"></i></button>
+                        <button onclick="deleteProduct(${product.id})" class="p-1 text-red-500 hover:bg-red-50 rounded" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
             });
         }
 
@@ -1375,52 +1421,109 @@
         }
 
         function editProductText(id, field) {
-            const product = state.products.find(p => p.id === id);
+            const product = appData.products.find(p => p.id === id);
             const newVal = prompt(`Edit ${field}:`, product[field]);
-            if (newVal !== null) {
-                product[field] = newVal;
+            if (newVal !== null && newVal.trim() !== '') {
+                product[field] = newVal.trim();
                 renderProducts();
-                renderProductImagesList();
+                renderAdminProductsList();
+                saveToStorage();
                 showToast('Product updated!');
             }
         }
 
         function editProductPrice(id) {
-            const product = state.products.find(p => p.id === id);
+            const product = appData.products.find(p => p.id === id);
             const newVal = prompt("Edit Price (LKR):", product.price);
-            if (newVal !== null && !isNaN(newVal)) {
+            if (newVal !== null && !isNaN(newVal) && newVal > 0) {
                 product.price = parseInt(newVal);
                 renderProducts();
+                renderAdminProductsList();
+                saveToStorage();
                 showToast('Price updated!');
+            }
+        }
+
+        function changeProductImage(productId) {
+            state.currentEditProductId = productId;
+            document.getElementById('product-image-changer').click();
+        }
+
+        function handleProductImageChange(input) {
+            if (input.files && input.files[0] && state.currentEditProductId) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const product = appData.products.find(p => p.id === state.currentEditProductId);
+                    if (product) {
+                        product.image = e.target.result;
+                        renderProducts();
+                        renderAdminProductsList();
+                        
+                        if (state.currentModalProduct && state.currentModalProduct.id === state.currentEditProductId) {
+                            document.getElementById('modal-img').src = e.target.result;
+                        }
+                        
+                        saveToStorage();
+                        showToast('Product image saved!');
+                    }
+                    state.currentEditProductId = null;
+                    input.value = '';
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
         function addNewProduct() {
             const name = prompt("Product Name:");
-            if(!name) return;
+            if (!name) return;
+            
             const price = prompt("Price (LKR):");
-            if(!price) return;
-            const category = prompt("Category (love/birthday/wedding/sympathy):", "love");
+            if (!price || isNaN(price)) return;
+            
+            const categories = ['love', 'birthday', 'wedding', 'sympathy'];
+            const category = prompt(`Category (${categories.join('/')}):`, "love");
+            if (!categories.includes(category)) {
+                showToast('Invalid category!');
+                return;
+            }
             
             const newProduct = {
                 id: Date.now(),
-                name: name,
+                name: name.trim(),
                 price: parseInt(price),
-                category: category || 'love',
+                category: category,
                 image: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?q=80&w=800&auto=format&fit=crop',
-                desc: 'New product description.'
+                desc: 'Beautiful floral arrangement. Contact us for more details.'
             };
             
-            state.products.push(newProduct);
+            appData.products.push(newProduct);
             renderProducts();
-            renderProductImagesList();
-            showToast('New Product Added!');
+            renderAdminProductsList();
+            saveToStorage();
+            showToast('New product added!');
         }
 
-        function openProductModal(id) {
-            if(state.isAdmin && event.target.closest('.bg-yellow-400')) return;
+        function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
             
-            const product = state.products.find(p => p.id === id);
+            const index = appData.products.findIndex(p => p.id === id);
+            if (index > -1) {
+                appData.products.splice(index, 1);
+                renderProducts();
+                renderAdminProductsList();
+                saveToStorage();
+                showToast('Product deleted!');
+            }
+        }
+
+        // ==========================================
+        // MODAL & CART
+        // ==========================================
+
+        function openProductModal(id) {
+            if (state.isAdmin && event.target.closest('.bg-yellow-400')) return;
+            
+            const product = appData.products.find(p => p.id === id);
             state.currentModalProduct = product;
             state.currentModalQty = 1;
 
@@ -1447,8 +1550,7 @@
 
         function addToCartFromModal() {
             if (!state.currentModalProduct) return;
-            
-            for(let i=0; i<state.currentModalQty; i++) {
+            for (let i = 0; i < state.currentModalQty; i++) {
                 addToCart(state.currentModalProduct.id, false);
             }
             closeProductModal();
@@ -1456,11 +1558,11 @@
         }
 
         function addToCart(id, showMsg = true) {
-            const product = state.products.find(p => p.id === id);
-            state.cart.push(product);
+            const product = appData.products.find(p => p.id === id);
+            state.cart.push({...product}); // Clone to avoid reference issues
             updateCartCount();
             renderCartItems();
-            if(showMsg) showToast('Added to cart');
+            if (showMsg) showToast('Added to cart');
         }
 
         function updateCartCount() {
@@ -1469,17 +1571,14 @@
 
         function toggleCart() {
             const drawer = document.getElementById('cart-drawer');
-            if (drawer.classList.contains('translate-x-full')) {
-                drawer.classList.remove('translate-x-full');
+            drawer.classList.toggle('translate-x-full');
+            if (!drawer.classList.contains('translate-x-full')) {
                 renderCartItems();
-            } else {
-                drawer.classList.add('translate-x-full');
             }
         }
 
         function renderCartItems() {
             const container = document.getElementById('cart-items');
-            container.innerHTML = '';
             
             if (state.cart.length === 0) {
                 container.innerHTML = '<div class="text-center text-gray-500 mt-10 flex flex-col items-center"><i class="fas fa-shopping-basket text-4xl mb-2 opacity-20"></i>Your cart is empty</div>';
@@ -1490,10 +1589,10 @@
             let total = 0;
             const counts = {};
             state.cart.forEach(x => { counts[x.id] = (counts[x.id] || 0) + 1; });
-            const uniqueIds = Object.keys(counts);
-
-            uniqueIds.forEach(id => {
-                const product = state.products.find(p => p.id == id);
+            
+            container.innerHTML = '';
+            Object.keys(counts).forEach(id => {
+                const product = appData.products.find(p => p.id == id);
                 const qty = counts[id];
                 const itemTotal = product.price * qty;
                 total += itemTotal;
@@ -1526,20 +1625,24 @@
         function checkout() {
             if (state.cart.length === 0) return;
             
-            let message = `Hello SunShine Creation! ${state.links.whatsapp_msg}%0A%0AI would like to order:%0A%0A`;
+            let message = `Hello SunShine Creation! ${appData.links.whatsapp_msg}%0A%0AI would like to order:%0A%0A`;
             const counts = {};
             state.cart.forEach(x => { counts[x.id] = (counts[x.id] || 0) + 1; });
             
             Object.keys(counts).forEach(id => {
-                const product = state.products.find(p => p.id == id);
+                const product = appData.products.find(p => p.id == id);
                 message += `- ${product.name} (Qty: ${counts[id]})%0A`;
             });
             
             const total = state.cart.reduce((sum, item) => sum + item.price, 0);
             message += `%0ATotal: Rs. ${total.toLocaleString()}`;
             
-            window.open(`https://wa.me/${state.links.whatsapp}?text=${message}`, '_blank');
+            window.open(`https://wa.me/${appData.links.whatsapp}?text=${message}`, '_blank');
         }
+
+        // ==========================================
+        // ADMIN PANEL FUNCTIONS
+        // ==========================================
 
         function toggleAdminLogin() {
             const modal = document.getElementById('admin-modal');
@@ -1582,25 +1685,68 @@
         }
 
         function switchAdminTab(tabName) {
-            document.getElementById('panel-content').classList.add('hidden');
-            document.getElementById('panel-images').classList.add('hidden');
-            document.getElementById('panel-appearance').classList.add('hidden');
-            document.getElementById('panel-links').classList.add('hidden');
-            
-            document.getElementById('tab-content').classList.remove('active');
-            document.getElementById('tab-images').classList.remove('active');
-            document.getElementById('tab-appearance').classList.remove('active');
-            document.getElementById('tab-links').classList.remove('active');
-            
+            ['content', 'images', 'products', 'appearance', 'links'].forEach(tab => {
+                document.getElementById(`panel-${tab}`).classList.add('hidden');
+                document.getElementById(`tab-${tab}`).classList.remove('active');
+            });
             document.getElementById(`panel-${tabName}`).classList.remove('hidden');
             document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
+        // ==========================================
+        // DATA EXPORT/IMPORT
+        // ==========================================
+
+        function exportData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `sunshine_creation_backup_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Data exported!');
+        }
+
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    
+                    // Validate structure
+                    if (imported.content && imported.products && imported.theme) {
+                        if (confirm('This will replace all current data. Continue?')) {
+                            appData = imported;
+                            saveToStorage();
+                            location.reload(); // Reload to apply all changes
+                        }
+                    } else {
+                        alert('Invalid data file!');
+                    }
+                } catch (err) {
+                    alert('Error reading file!');
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
         function resetAllData() {
-            if(confirm("WARNING: This will reset ALL changes including content, colors, images, and links. Continue?")) {
+            if (confirm('WARNING: This will delete ALL saved changes and restore defaults. This cannot be undone! Continue?')) {
+                localStorage.removeItem(STORAGE_KEY);
                 location.reload();
             }
         }
+
+        // ==========================================
+        // UTILITIES
+        // ==========================================
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -1650,5 +1796,4 @@
         }
     </script>
 </body>
-
 </html>
