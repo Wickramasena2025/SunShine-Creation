@@ -40,7 +40,10 @@
     </script>
 
     <style>
-        body { scroll-behavior: smooth; }
+        body { 
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
         
         .glass-nav {
             background: rgba(255, 255, 255, 0.95);
@@ -54,10 +57,10 @@
             background-attachment: fixed;
         }
 
-        .shop-pattern {
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+        @media (max-width: 768px) {
+            .hero-pattern {
+                background-attachment: scroll;
+            }
         }
 
         .text-shadow { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
@@ -86,85 +89,74 @@
         ::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 5px; }
         ::-webkit-scrollbar-thumb:hover { background: #065f46; }
 
-        .admin-editable {
-            border: 2px dashed #fbbf24;
-            position: relative;
-            cursor: pointer;
+        /* Mobile menu animation */
+        .mobile-menu-enter {
+            animation: slideDown 0.3s ease-out;
         }
-        .admin-editable::after {
-            content: '✎ Edit';
-            position: absolute;
-            top: -20px;
-            right: 0;
-            background: #fbbf24;
-            color: #000;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            display: none;
-            z-index: 10;
-        }
-        .admin-editable:hover::after { display: block; }
-
-        .admin-tab { transition: all 0.3s ease; }
-        .admin-tab.active {
-            background-color: #064e3b;
-            color: white;
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .image-preview {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px dashed #ccc;
+        /* Responsive typography */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+            }
+            .hero-subtitle {
+                font-size: 1rem !important;
+            }
         }
 
-        .product-image-preview {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #ddd;
+        /* Touch-friendly buttons */
+        @media (hover: none) {
+            .card-hover:hover {
+                transform: none;
+            }
         }
 
-        input[type="color"] {
-            -webkit-appearance: none;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        input[type="color"]::-webkit-color-swatch {
-            border: none;
-            border-radius: 50%;
-            border: 2px solid #ddd;
+        /* Cart drawer responsive */
+        @media (max-width: 480px) {
+            #cart-drawer {
+                max-width: 100%;
+                width: 100%;
+            }
         }
 
-        .shop-overlay {
-            position: absolute;
-            inset: 0;
+        /* Product grid responsive */
+        @media (max-width: 640px) {
+            #product-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* Save indicator animation */
-        @keyframes pulse-green {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        @media (min-width: 641px) and (max-width: 1024px) {
+            #product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-        .save-indicator {
-            animation: pulse-green 2s infinite;
+
+        /* Floating button responsive */
+        @media (max-width: 480px) {
+            #float-whatsapp {
+                width: 50px !important;
+                height: 50px !important;
+            }
+            #float-whatsapp i {
+                font-size: 1.5rem !important;
+            }
         }
     </style>
 </head>
-<body class="font-sans text-gray-800 antialiased overflow-x-hidden" id="main-body">
+<body class="font-sans text-gray-800 bg-cream antialiased overflow-x-hidden">
 
     <!-- Loading Screen -->
     <div id="loader">
-        <div class="text-center">
-            <i class="fas fa-leaf text-6xl text-white animate-bounce mb-4"></i>
-            <h2 class="text-2xl text-white font-serif tracking-widest">SUNSHINE CREATION</h2>
+        <div class="text-center px-4">
+            <i class="fas fa-leaf text-5xl md:text-6xl text-white animate-bounce mb-4"></i>
+            <h2 class="text-xl md:text-2xl text-white font-serif tracking-widest">SUNSHINE CREATION</h2>
         </div>
     </div>
 
@@ -174,461 +166,181 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <i class="fas fa-spa text-primary text-3xl mr-2"></i>
-                    <span class="font-serif text-2xl font-bold text-primary tracking-wide editable-content" data-key="brand_name">SunShine</span>
+                    <i class="fas fa-spa text-primary text-2xl md:text-3xl mr-2"></i>
+                    <span class="font-serif text-xl md:text-2xl font-bold text-primary tracking-wide">SunShine</span>
                 </div>
 
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#home" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_home">Home</a>
-                    <a href="#shop" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_shop">Shop</a>
-                    <a href="#about" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_about">About</a>
-                    <a href="#contact" class="text-gray-600 hover:text-primary font-medium transition editable-content" data-key="nav_contact">Contact</a>
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 lg:space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-primary font-medium transition text-sm lg:text-base">Home</a>
+                    <a href="#shop" class="text-gray-600 hover:text-primary font-medium transition text-sm lg:text-base">Shop</a>
+                    <a href="#about" class="text-gray-600 hover:text-primary font-medium transition text-sm lg:text-base">About</a>
+                    <a href="#contact" class="text-gray-600 hover:text-primary font-medium transition text-sm lg:text-base">Contact</a>
                     
+                    <!-- Language Selector -->
                     <div class="relative group">
-                        <button class="text-primary hover:text-secondary font-medium flex items-center gap-1">
+                        <button class="text-primary hover:text-secondary font-medium flex items-center gap-1 text-sm">
                             <i class="fas fa-globe"></i> <span id="current-lang">EN</span>
                         </button>
-                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border border-gray-100">
+                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border border-gray-100 z-50">
                             <button onclick="changeLanguage('en')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">English</button>
                             <button onclick="changeLanguage('si')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Sinhala</button>
                             <button onclick="changeLanguage('ta')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">Tamil</button>
                         </div>
                     </div>
 
+                    <!-- Cart Icon -->
                     <div class="relative cursor-pointer" onclick="toggleCart()">
-                        <i class="fas fa-shopping-bag text-primary text-xl"></i>
+                        <i class="fas fa-shopping-bag text-primary text-lg md:text-xl"></i>
                         <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </div>
-
-                    <button onclick="toggleAdminLogin()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded text-gray-600 font-semibold">
-                        <i class="fas fa-lock"></i> Admin
-                    </button>
                 </div>
 
-                <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="text-primary focus:outline-none">
-                        <i class="fas fa-bars text-2xl"></i>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <div class="relative cursor-pointer" onclick="toggleCart()">
+                        <i class="fas fa-shopping-bag text-primary text-xl"></i>
+                        <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </div>
+                    <button onclick="toggleMobileMenu()" class="text-primary focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl" id="menu-icon"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_home">Home</a>
-                <a href="#shop" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_shop">Shop</a>
-                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_about">About</a>
-                <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md editable-content" data-key="nav_contact">Contact</a>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg mobile-menu-enter">
+            <div class="px-4 py-3 space-y-2">
+                <a href="#home" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md">Home</a>
+                <a href="#shop" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md">Shop</a>
+                <a href="#about" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md">About</a>
+                <a href="#contact" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md">Contact</a>
+                
+                <!-- Mobile Language Selector -->
+                <div class="border-t border-gray-100 pt-2 mt-2">
+                    <p class="px-3 py-2 text-xs text-gray-500 uppercase tracking-wider">Select Language</p>
+                    <div class="flex gap-2 px-3">
+                        <button onclick="changeLanguage('en'); closeMobileMenu()" class="flex-1 py-2 text-sm border rounded hover:bg-gray-50">English</button>
+                        <button onclick="changeLanguage('si'); closeMobileMenu()" class="flex-1 py-2 text-sm border rounded hover:bg-gray-50">Sinhala</button>
+                        <button onclick="changeLanguage('ta'); closeMobileMenu()" class="flex-1 py-2 text-sm border rounded hover:bg-gray-50">Tamil</button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- Admin Login Modal -->
-    <div id="admin-modal" class="fixed inset-0 z-[60] hidden bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full shadow-2xl transform transition-all scale-95 opacity-0" id="admin-modal-content">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-serif font-bold text-primary">Admin Access</h3>
-                <button onclick="toggleAdminLogin()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                    <input type="text" id="admin-user" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" placeholder="admin">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" id="admin-pass" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary" placeholder="••••••">
-                </div>
-                <button type="submit" class="w-full bg-primary text-white py-2 rounded-md hover:bg-secondary transition shadow-lg">Login</button>
-                <p id="login-error" class="text-red-500 text-sm hidden text-center">Invalid credentials.</p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Enhanced Admin Panel with Save Indicator -->
-    <div id="admin-panel" class="fixed right-0 top-0 w-96 bg-white shadow-2xl h-screen transform translate-x-full transition-transform duration-300 z-50 overflow-hidden border-l border-gray-200 flex flex-col">
-        <!-- Admin Header -->
-        <div class="p-4 bg-primary text-white flex-shrink-0">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="text-lg font-bold flex items-center gap-2">
-                    <i class="fas fa-cog"></i> Admin Dashboard
-                </h2>
-                <button onclick="toggleAdminMode()" class="text-white hover:text-red-300 text-xs font-bold bg-white bg-opacity-20 px-2 py-1 rounded">
-                    <i class="fas fa-sign-out-alt"></i> Exit
-                </button>
-            </div>
-            <div class="flex items-center justify-between">
-                <p class="text-xs text-green-100">Changes auto-save to browser</p>
-                <div id="save-status" class="flex items-center gap-1 text-xs bg-green-500 bg-opacity-30 px-2 py-1 rounded">
-                    <i class="fas fa-check"></i> Saved
-                </div>
-            </div>
-        </div>
-
-        <!-- Admin Tabs -->
-        <div class="flex border-b border-gray-200 flex-shrink-0">
-            <button onclick="switchAdminTab('content')" class="admin-tab active flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-content">
-                <i class="fas fa-edit"></i> Content
-            </button>
-            <button onclick="switchAdminTab('images')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-images">
-                <i class="fas fa-images"></i> Images
-            </button>
-            <button onclick="switchAdminTab('products')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-products">
-                <i class="fas fa-box"></i> Products
-            </button>
-            <button onclick="switchAdminTab('appearance')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-appearance">
-                <i class="fas fa-paint-brush"></i> Theme
-            </button>
-            <button onclick="switchAdminTab('links')" class="admin-tab flex-1 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50" id="tab-links">
-                <i class="fas fa-link"></i> Links
-            </button>
-        </div>
-
-        <!-- Admin Content Area (Scrollable) -->
-        <div class="flex-1 overflow-y-auto p-4" id="admin-content">
-            
-            <!-- Content Tab -->
-            <div id="panel-content" class="space-y-4">
-                <div class="bg-green-50 p-3 rounded-lg border border-green-100">
-                    <h4 class="font-semibold text-green-800 mb-1 text-sm"><i class="fas fa-info-circle"></i> Quick Edit</h4>
-                    <p class="text-xs text-green-700">All changes are automatically saved to your browser's storage.</p>
-                </div>
-
-                <!-- Hero Section -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fas fa-home text-primary"></i> Hero Section
-                    </h3>
-                    <div class="space-y-2">
-                        <input type="text" id="edit-hero-title" onchange="updateContent('hero_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Hero Title">
-                        <textarea id="edit-hero-subtitle" onchange="updateContent('hero_subtitle', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Hero Subtitle"></textarea>
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="edit-btn1-text" onchange="updateContent('btn1_text', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Button 1 Text">
-                            <input type="text" id="edit-btn2-text" onchange="updateContent('btn2_text', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Button 2 Text">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Shop Section -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fas fa-shopping-bag text-primary"></i> Shop Section
-                    </h3>
-                    <input type="text" id="edit-shop-title" onchange="updateContent('shop_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Section Title">
-                </div>
-
-                <!-- About Section -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fas fa-info-circle text-primary"></i> About Section
-                    </h3>
-                    <div class="space-y-2">
-                        <input type="text" id="edit-about-title" onchange="updateContent('about_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="About Title">
-                        <textarea id="edit-about-p1" onchange="updateContent('about_p1', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Paragraph 1"></textarea>
-                        <textarea id="edit-about-p2" onchange="updateContent('about_p2', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Paragraph 2"></textarea>
-                    </div>
-                </div>
-
-                <!-- Contact Section -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fas fa-address-card text-primary"></i> Contact Info
-                    </h3>
-                    <div class="space-y-2">
-                        <input type="text" id="edit-contact-visit-title" onchange="updateContent('contact_visit_title', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Visit Us Title">
-                        <textarea id="edit-address" onchange="updateContent('contact_address', this.value)" rows="2" class="w-full px-2 py-1 border rounded text-xs" placeholder="Address"></textarea>
-                        <input type="text" id="edit-phone" onchange="updateContent('contact_phone', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Phone">
-                        <input type="text" id="edit-email" onchange="updateContent('contact_email', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Email">
-                    </div>
-                </div>
-
-                <!-- Navigation -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fas fa-bars text-primary"></i> Navigation
-                    </h3>
-                    <div class="space-y-2">
-                        <input type="text" id="edit-brand-name" onchange="updateContent('brand_name', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Brand Name">
-                        <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="edit-nav-home" onchange="updateContent('nav_home', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Home">
-                            <input type="text" id="edit-nav-shop" onchange="updateContent('nav_shop', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Shop">
-                            <input type="text" id="edit-nav-about" onchange="updateContent('nav_about', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="About">
-                            <input type="text" id="edit-nav-contact" onchange="updateContent('nav_contact', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="Contact">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Data Management -->
-                <div class="border-t pt-4 mt-4">
-                    <button onclick="exportData()" class="w-full bg-blue-500 text-white py-2 rounded text-xs font-bold mb-2 hover:bg-blue-600 transition">
-                        <i class="fas fa-download"></i> Export Data (Backup)
-                    </button>
-                    <label class="w-full bg-gray-500 text-white py-2 rounded text-xs font-bold mb-2 hover:bg-gray-600 transition flex items-center justify-center cursor-pointer">
-                        <i class="fas fa-upload"></i> Import Data
-                        <input type="file" id="import-file" accept=".json" onchange="importData(this)" class="hidden">
-                    </label>
-                    <button onclick="resetAllData()" class="w-full bg-red-500 text-white py-2 rounded text-xs font-bold hover:bg-red-600 transition">
-                        <i class="fas fa-trash"></i> Reset Everything
-                    </button>
-                </div>
-            </div>
-
-            <!-- Images Tab -->
-            <div id="panel-images" class="space-y-4 hidden">
-                <div class="bg-purple-50 p-3 rounded-lg border border-purple-100">
-                    <h4 class="font-semibold text-purple-800 mb-1 text-sm"><i class="fas fa-images"></i> Image Manager</h4>
-                    <p class="text-xs text-purple-700">Click images to change. All images are saved to browser storage.</p>
-                </div>
-
-                <!-- Hero Image -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Hero Background</h3>
-                    <img id="preview-hero-image" class="image-preview mb-2 cursor-pointer" onclick="document.getElementById('hero-image-upload').click()">
-                    <input type="file" id="hero-image-upload" accept="image/*" onchange="handleImageUpload(this, 'hero')" class="hidden">
-                    <p class="text-xs text-gray-500">Click image to change • 1920x1080px recommended</p>
-                </div>
-
-                <!-- Shop Background -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Shop Section Background</h3>
-                    <img id="preview-shop-image" class="image-preview mb-2 cursor-pointer" onclick="document.getElementById('shop-image-upload').click()" style="background: #f3f4f6;">
-                    <input type="file" id="shop-image-upload" accept="image/*" onchange="handleImageUpload(this, 'shop')" class="hidden">
-                    <div class="flex items-center gap-2 mt-2">
-                        <input type="checkbox" id="shop-bg-enable" onchange="toggleShopBackground(this.checked)" class="rounded">
-                        <label class="text-xs text-gray-700">Enable background image</label>
-                    </div>
-                </div>
-
-                <!-- About Image -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">About Section Image</h3>
-                    <img id="preview-about-image" class="image-preview mb-2 cursor-pointer" onclick="document.getElementById('about-image-upload').click()">
-                    <input type="file" id="about-image-upload" accept="image/*" onchange="handleImageUpload(this, 'about')" class="hidden">
-                    <p class="text-xs text-gray-500">Click image to change • 800x600px recommended</p>
-                </div>
-            </div>
-
-            <!-- Products Tab -->
-            <div id="panel-products" class="space-y-4 hidden">
-                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <h4 class="font-semibold text-blue-800 mb-1 text-sm"><i class="fas fa-box-open"></i> Product Manager</h4>
-                    <p class="text-xs text-blue-700">Click any product to edit its image, name, price, or description.</p>
-                </div>
-
-                <button onclick="addNewProduct()" class="w-full bg-primary text-white py-2 rounded text-xs font-bold hover:bg-secondary transition mb-2">
-                    <i class="fas fa-plus"></i> Add New Product
-                </button>
-
-                <div id="admin-products-list" class="space-y-2 max-h-96 overflow-y-auto">
-                    <!-- Products injected here -->
-                </div>
-            </div>
-
-            <!-- Appearance Tab -->
-            <div id="panel-appearance" class="space-y-4 hidden">
-                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <h4 class="font-semibold text-blue-800 mb-1 text-sm"><i class="fas fa-palette"></i> Theme Colors</h4>
-                </div>
-
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Primary Color</h3>
-                    <div class="flex items-center gap-3">
-                        <input type="color" id="primary-color-picker" value="#064e3b" onchange="updateThemeColor('primary', this.value)">
-                        <span class="text-xs text-gray-600" id="primary-color-value">#064e3b</span>
-                    </div>
-                </div>
-
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Secondary Color</h3>
-                    <div class="flex items-center gap-3">
-                        <input type="color" id="secondary-color-picker" value="#065f46" onchange="updateThemeColor('secondary', this.value)">
-                        <span class="text-xs text-gray-600" id="secondary-color-value">#065f46</span>
-                    </div>
-                </div>
-
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Background Color</h3>
-                    <div class="flex items-center gap-3">
-                        <input type="color" id="bg-color-picker" value="#f9fafb" onchange="updateThemeColor('bg', this.value)">
-                        <span class="text-xs text-gray-600" id="bg-color-value">#f9fafb</span>
-                    </div>
-                </div>
-
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Hero Overlay</h3>
-                    <input type="range" id="hero-opacity" min="0" max="90" value="40" oninput="updateHeroOpacity(this.value)" class="w-full">
-                    <p class="text-xs text-gray-500 mt-1">Darkness: <span id="hero-opacity-value">40%</span></p>
-                </div>
-
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Shop Overlay</h3>
-                    <input type="range" id="shop-opacity" min="0" max="95" value="92" oninput="updateShopOpacity(this.value)" class="w-full">
-                    <p class="text-xs text-gray-500 mt-1">Opacity: <span id="shop-opacity-value">92%</span></p>
-                </div>
-
-                <button onclick="resetTheme()" class="w-full bg-gray-500 text-white py-2 rounded text-xs font-bold hover:bg-gray-600 transition">
-                    Reset to Default Theme
-                </button>
-            </div>
-
-            <!-- Links Tab -->
-            <div id="panel-links" class="space-y-4 hidden">
-                <div class="bg-purple-50 p-3 rounded-lg border border-purple-100">
-                    <h4 class="font-semibold text-purple-800 mb-1 text-sm"><i class="fas fa-link"></i> Social & Contact Links</h4>
-                </div>
-
-                <!-- WhatsApp -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fab fa-whatsapp text-green-500"></i> WhatsApp
-                    </h3>
-                    <input type="text" id="edit-whatsapp-num" onchange="updateLink('whatsapp', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="94771234567">
-                    <input type="text" id="edit-whatsapp-msg" onchange="updateLink('whatsapp_msg', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="Default message">
-                    <div class="flex items-center gap-2">
-                        <input type="checkbox" id="show-whatsapp-btn" onchange="toggleFloatingButton('whatsapp', this.checked)" class="rounded">
-                        <label class="text-xs text-gray-700">Show floating button</label>
-                    </div>
-                </div>
-
-                <!-- Facebook -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fab fa-facebook text-blue-600"></i> Facebook
-                    </h3>
-                    <input type="url" id="edit-facebook-url" onchange="updateLink('facebook', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="https://facebook.com/yourpage">
-                    <div class="flex items-center gap-2">
-                        <input type="checkbox" id="show-facebook-btn" onchange="toggleFloatingButton('facebook', this.checked)" class="rounded">
-                        <label class="text-xs text-gray-700">Show floating button</label>
-                    </div>
-                </div>
-
-                <!-- Instagram -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm flex items-center gap-2">
-                        <i class="fab fa-instagram text-pink-600"></i> Instagram
-                    </h3>
-                    <input type="url" id="edit-instagram-url" onchange="updateLink('instagram', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="https://instagram.com/yourhandle">
-                </div>
-
-                <!-- Footer Links -->
-                <div class="border rounded-lg p-3 bg-gray-50">
-                    <h3 class="font-bold text-gray-800 mb-2 text-sm">Footer Social Links</h3>
-                    <input type="url" id="edit-footer-fb" onchange="updateLink('footer_fb', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="Facebook URL">
-                    <input type="url" id="edit-footer-ig" onchange="updateLink('footer_ig', this.value)" class="w-full px-2 py-1 border rounded text-xs mb-1" placeholder="Instagram URL">
-                    <input type="url" id="edit-footer-wa" onchange="updateLink('footer_wa', this.value)" class="w-full px-2 py-1 border rounded text-xs" placeholder="WhatsApp URL">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Hero Section -->
-    <section id="home" class="relative h-screen flex items-center justify-center hero-pattern" style="background-image: url('https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop');">
+    <section id="home" class="relative min-h-screen flex items-center justify-center hero-pattern" style="background-image: url('https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop');">
         <div class="absolute inset-0 bg-black bg-opacity-40" id="hero-overlay"></div>
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto gs-reveal">
-            <span class="text-white text-lg md:text-xl font-medium tracking-[0.2em] uppercase mb-4 block text-shadow editable-content" data-key="hero_welcome">Welcome to SunShine Creation</span>
-            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight text-shadow editable-content" data-key="hero_title">
+        <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto gs-reveal py-20">
+            <span class="text-white text-sm sm:text-lg md:text-xl font-medium tracking-[0.2em] uppercase mb-4 block text-shadow">Welcome to SunShine Creation</span>
+            <h1 class="hero-title text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-4 sm:mb-6 leading-tight text-shadow">
                 Fresh Flowers for Every Moment
             </h1>
-            <p class="text-lg md:text-xl text-gray-100 mb-10 max-w-2xl mx-auto font-light editable-content" data-key="hero_subtitle">
+            <p class="hero-subtitle text-base sm:text-lg md:text-xl text-gray-100 mb-6 sm:mb-10 max-w-2xl mx-auto font-light px-4">
                 Handcrafted bouquets delivered with love. Making your special occasions unforgettable with the beauty of nature.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#shop" id="hero-btn1" class="px-8 py-4 bg-primary hover:bg-secondary text-white font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn1_text">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+                <a href="#shop" class="px-6 sm:px-8 py-3 sm:py-4 bg-primary hover:bg-secondary text-white font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
                     Order Now <i class="fas fa-arrow-right"></i>
                 </a>
-                <a href="https://wa.me/94771234567" id="hero-btn2" target="_blank" class="px-8 py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 editable-content" data-key="btn2_text">
-                    <i class="fab fa-whatsapp text-xl"></i> WhatsApp Us
+                <a href="https://wa.me/94785391995" target="_blank" class="px-6 sm:px-8 py-3 sm:py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <i class="fab fa-whatsapp text-lg sm:text-xl"></i> WhatsApp Us
                 </a>
             </div>
         </div>
         
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white">
-            <i class="fas fa-chevron-down text-2xl"></i>
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-white">
+            <i class="fas fa-chevron-down text-xl sm:text-2xl"></i>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white">
+    <section class="py-12 sm:py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-                <div class="p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
-                    <div class="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-2xl mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-10 text-center">
+                <div class="p-4 sm:p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-xl sm:text-2xl mb-3 sm:mb-4">
                         <i class="fas fa-truck"></i>
                     </div>
-                    <h3 class="text-xl font-serif font-bold text-primary mb-2 editable-content" data-key="feat1_title">Island-wide Delivery</h3>
-                    <p class="text-gray-600 editable-content" data-key="feat1_desc">Fast and reliable delivery across Sri Lanka to your doorstep.</p>
+                    <h3 class="text-lg sm:text-xl font-serif font-bold text-primary mb-2">Island-wide Delivery</h3>
+                    <p class="text-gray-600 text-sm sm:text-base">Fast and reliable delivery across Sri Lanka to your doorstep.</p>
                 </div>
-                <div class="p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
-                    <div class="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-2xl mb-4">
+                <div class="p-4 sm:p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-xl sm:text-2xl mb-3 sm:mb-4">
                         <i class="fas fa-leaf"></i>
                     </div>
-                    <h3 class="text-xl font-serif font-bold text-primary mb-2 editable-content" data-key="feat2_title">Freshly Picked</h3>
-                    <p class="text-gray-600 editable-content" data-key="feat2_desc">We source the freshest flowers daily from local growers.</p>
+                    <h3 class="text-lg sm:text-xl font-serif font-bold text-primary mb-2">Freshly Picked</h3>
+                    <p class="text-gray-600 text-sm sm:text-base">We source the freshest flowers daily from local growers.</p>
                 </div>
-                <div class="p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
-                    <div class="w-16 h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-2xl mb-4">
+                <div class="p-4 sm:p-6 rounded-xl bg-green-50 hover:bg-green-100 transition duration-300 gs-reveal">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-primary rounded-full flex items-center justify-center text-white text-xl sm:text-2xl mb-3 sm:mb-4">
                         <i class="fas fa-heart"></i>
                     </div>
-                    <h3 class="text-xl font-serif font-bold text-primary mb-2 editable-content" data-key="feat3_title">Made with Love</h3>
-                    <p class="text-gray-600 editable-content" data-key="feat3_desc">Each bouquet is carefully arranged by our expert florists.</p>
+                    <h3 class="text-lg sm:text-xl font-serif font-bold text-primary mb-2">Made with Love</h3>
+                    <p class="text-gray-600 text-sm sm:text-base">Each bouquet is carefully arranged by our expert florists.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Shop Section -->
-    <section id="shop" class="relative py-20 shop-pattern" style="background-image: none;">
-        <div class="shop-overlay" id="shop-overlay" style="background: rgba(249, 250, 251, 1);"></div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 gs-reveal">
-                <h2 class="text-4xl font-serif font-bold text-primary mb-4 editable-content" data-key="shop_title">Our Collection</h2>
-                <div class="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
+    <section id="shop" class="py-12 sm:py-20 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 sm:mb-16 gs-reveal">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-primary mb-4">Our Collection</h2>
+                <div class="w-16 sm:w-24 h-1 bg-primary mx-auto rounded-full mb-4 sm:mb-6"></div>
                 
-                <div class="flex flex-wrap justify-center gap-4" id="category-filters">
-                    <button onclick="filterProducts('all')" class="filter-btn active px-6 py-2 rounded-full border border-primary bg-primary text-white transition">All</button>
-                    <button onclick="filterProducts('love')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Love & Romance</button>
-                    <button onclick="filterProducts('birthday')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Birthday</button>
-                    <button onclick="filterProducts('wedding')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Wedding</button>
-                    <button onclick="filterProducts('sympathy')" class="filter-btn px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition">Sympathy</button>
+                <!-- Filters -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 px-2" id="category-filters">
+                    <button onclick="filterProducts('all')" class="filter-btn active px-4 sm:px-6 py-2 rounded-full border border-primary bg-primary text-white transition text-sm sm:text-base">All</button>
+                    <button onclick="filterProducts('love')" class="filter-btn px-4 sm:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition text-sm sm:text-base">Love</button>
+                    <button onclick="filterProducts('birthday')" class="filter-btn px-4 sm:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition text-sm sm:text-base">Birthday</button>
+                    <button onclick="filterProducts('wedding')" class="filter-btn px-4 sm:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition text-sm sm:text-base">Wedding</button>
+                    <button onclick="filterProducts('sympathy')" class="filter-btn px-4 sm:px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition text-sm sm:text-base">Sympathy</button>
                 </div>
             </div>
 
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
                 <!-- Products injected via JS -->
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="py-20 bg-white overflow-hidden">
+    <section id="about" class="py-12 sm:py-20 bg-white overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2 gs-reveal-left">
+            <div class="flex flex-col lg:flex-row items-center gap-8 sm:gap-12">
+                <div class="lg:w-1/2 gs-reveal-left w-full">
                     <div class="relative">
-                        <div class="absolute -top-4 -left-4 w-24 h-24 bg-primary rounded-full opacity-20"></div>
-                        <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-secondary rounded-full opacity-20"></div>
-                        <img id="about-image" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop" alt="Florist at work" class="relative rounded-2xl shadow-2xl w-full object-cover h-[500px]">
+                        <div class="absolute -top-2 -left-2 sm:-top-4 sm:-left-4 w-16 h-16 sm:w-24 sm:h-24 bg-primary rounded-full opacity-20"></div>
+                        <div class="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-20 h-20 sm:w-32 sm:h-32 bg-secondary rounded-full opacity-20"></div>
+                        <img id="about-image" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop" alt="Florist at work" class="relative rounded-2xl shadow-2xl w-full object-cover h-64 sm:h-80 lg:h-[500px]">
                     </div>
                 </div>
-                <div class="lg:w-1/2 gs-reveal-right">
-                    <h2 class="text-4xl font-serif font-bold text-primary mb-6 editable-content" data-key="about_title">Our Story</h2>
-                    <p class="text-gray-600 mb-6 leading-relaxed editable-content" data-key="about_p1">
+                <div class="lg:w-1/2 gs-reveal-right w-full">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-primary mb-4 sm:mb-6">Our Story</h2>
+                    <p class="text-gray-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
                         Founded in the heart of Sri Lanka, SunShine Creation began with a simple mission: to bring joy through the language of flowers. What started as a small home-based business has blossomed into a beloved floral destination.
                     </p>
-                    <p class="text-gray-600 mb-8 leading-relaxed editable-content" data-key="about_p2">
+                    <p class="text-gray-600 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
                         We believe that every bouquet tells a story. Whether it's a celebration of love, a birthday surprise, or a gesture of sympathy, our expert florists pour their passion into every arrangement.
                     </p>
                     
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="border-l-4 border-primary pl-4">
-                            <h4 class="text-2xl font-bold text-primary editable-content" data-key="stat1_num">10+</h4>
-                            <p class="text-sm text-gray-500 editable-content" data-key="stat1_text">Years Experience</p>
+                    <div class="grid grid-cols-2 gap-4 sm:gap-6">
+                        <div class="border-l-4 border-primary pl-3 sm:pl-4">
+                            <h4 class="text-xl sm:text-2xl font-bold text-primary">10+</h4>
+                            <p class="text-xs sm:text-sm text-gray-500">Years Experience</p>
                         </div>
-                        <div class="border-l-4 border-primary pl-4">
-                            <h4 class="text-2xl font-bold text-primary editable-content" data-key="stat2_num">5000+</h4>
-                            <p class="text-sm text-gray-500 editable-content" data-key="stat2_text">Happy Customers</p>
+                        <div class="border-l-4 border-primary pl-3 sm:pl-4">
+                            <h4 class="text-xl sm:text-2xl font-bold text-primary">5000+</h4>
+                            <p class="text-xs sm:text-sm text-gray-500">Happy Customers</p>
                         </div>
                     </div>
                 </div>
@@ -637,75 +349,84 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-primary text-white relative">
+    <section id="contact" class="py-12 sm:py-20 bg-primary text-white relative">
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-serif font-bold mb-4 editable-content" data-key="contact_title">Get in Touch</h2>
-                <p class="text-green-100 editable-content" data-key="contact_subtitle">Have a question or custom order? We'd love to hear from you.</p>
+            <div class="text-center mb-8 sm:mb-16">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4">Get in Touch</h2>
+                <p class="text-green-100 text-sm sm:text-base px-4">Have a question or custom order? We'd love to hear from you.</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="space-y-8 gs-reveal">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-map-marker-alt text-xl"></i>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
+                <!-- Contact Info -->
+                <div class="space-y-4 sm:space-y-8 gs-reveal">
+                    <div class="flex items-start space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-map-marker-alt text-base sm:text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_visit_title">Visit Us</h4>
-                            <p class="text-green-100 editable-content" data-key="contact_address">123 Flower Road, Colombo 07, Sri Lanka</p>
+                            <h4 class="text-lg sm:text-xl font-bold mb-1">Visit Us</h4>
+                            <p class="text-green-100 text-sm sm:text-base">123 Flower Road, Colombo 07, Sri Lanka</p>
                         </div>
                     </div>
 
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-phone-alt text-xl"></i>
+                    <div class="flex items-start space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-phone-alt text-base sm:text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_call_title">Call Us</h4>
-                            <p class="text-green-100 editable-content" data-key="contact_phone">+94 77 123 4567</p>
-                            <p class="text-green-100 text-sm mt-1 editable-content" data-key="contact_hours">Mon - Sat: 9:00 AM - 6:00 PM</p>
+                            <h4 class="text-lg sm:text-xl font-bold mb-1">Call Us</h4>
+                            <p class="text-green-100 text-sm sm:text-base">+94 77 123 4567</p>
+                            <p class="text-green-100 text-xs sm:text-sm mt-1">Mon - Sat: 9:00 AM - 6:00 PM</p>
                         </div>
                     </div>
 
-                    <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-envelope text-xl"></i>
+                    <div class="flex items-start space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-envelope text-base sm:text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="text-xl font-bold mb-2 editable-content" data-key="contact_email_title">Email Us</h4>
-                            <p class="text-green-100 editable-content" data-key="contact_email">hello@sunshinecreation.lk</p>
+                            <h4 class="text-lg sm:text-xl font-bold mb-1">Email Us</h4>
+                            <p class="text-green-100 text-sm sm:text-base">hello@sunshinecreation.lk</p>
                         </div>
                     </div>
 
-                    <div class="flex space-x-4 pt-4">
-                        <a id="social-fb" href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition"><i class="fab fa-facebook-f"></i></a>
-                        <a id="social-ig" href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition"><i class="fab fa-instagram"></i></a>
-                        <a id="social-wa" href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition"><i class="fab fa-whatsapp"></i></a>
+                    <!-- Socials -->
+                    <div class="flex space-x-3 sm:space-x-4 pt-2 sm:pt-4">
+                        <a href="#" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                            <i class="fab fa-facebook-f text-sm sm:text-base"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                            <i class="fab fa-instagram text-sm sm:text-base"></i>
+                        </a>
+                        <a href="https://wa.me/94785391995" target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                            <i class="fab fa-whatsapp text-sm sm:text-base"></i>
+                        </a>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl p-8 text-gray-800 shadow-2xl gs-reveal">
-                    <form onsubmit="handleContactSubmit(event)" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Contact Form -->
+                <div class="bg-white rounded-2xl p-4 sm:p-8 text-gray-800 shadow-2xl gs-reveal">
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-4 sm:space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                                <input type="text" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                                <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Name</label>
+                                <input type="text" required class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                                <input type="tel" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                                <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                <input type="tel" required class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition">
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" required class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                            <textarea rows="4" required class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"></textarea>
+                            <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea rows="3" sm:rows="4" required class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-4 rounded-lg transition shadow-lg transform hover:-translate-y-1">
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 sm:py-4 rounded-lg transition shadow-lg transform hover:-translate-y-1 text-sm sm:text-base">
                             Send Message
                         </button>
                     </form>
@@ -715,107 +436,103 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-16 pb-8">
+    <footer class="bg-gray-900 text-white pt-12 sm:pt-16 pb-6 sm:pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8 sm:mb-12">
+                <div class="col-span-1 sm:col-span-2 lg:col-span-1">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-spa text-primary text-2xl mr-2"></i>
-                        <span class="font-serif text-xl font-bold editable-content" data-key="footer_brand">SunShine Creation</span>
+                        <i class="fas fa-spa text-primary text-xl sm:text-2xl mr-2"></i>
+                        <span class="font-serif text-lg sm:text-xl font-bold">SunShine Creation</span>
                     </div>
-                    <p class="text-gray-400 text-sm leading-relaxed editable-content" data-key="footer_desc">
+                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">
                         Bringing nature's beauty to your doorstep. Premium floral arrangements for every occasion in Sri Lanka.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="text-lg font-bold mb-4 text-primary editable-content" data-key="footer_links_title">Quick Links</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="#home" class="hover:text-white transition editable-content" data-key="footer_link_home">Home</a></li>
-                        <li><a href="#shop" class="hover:text-white transition editable-content" data-key="footer_link_shop">Shop</a></li>
-                        <li><a href="#about" class="hover:text-white transition editable-content" data-key="footer_link_about">About Us</a></li>
-                        <li><a href="#contact" class="hover:text-white transition editable-content" data-key="footer_link_contact">Contact</a></li>
+                    <h4 class="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-primary">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-xs sm:text-sm">
+                        <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                        <li><a href="#shop" class="hover:text-white transition">Shop</a></li>
+                        <li><a href="#about" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-white transition">Contact</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-lg font-bold mb-4 text-primary editable-content" data-key="footer_cat_title">Categories</h4>
-                    <ul class="space-y-2 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat1">Wedding Flowers</a></li>
-                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat2">Birthday Bouquets</a></li>
-                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat3">Anniversary Gifts</a></li>
-                        <li><a href="#" class="hover:text-white transition editable-content" data-key="footer_cat4">Sympathy Wreaths</a></li>
+                    <h4 class="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-primary">Categories</h4>
+                    <ul class="space-y-2 text-gray-400 text-xs sm:text-sm">
+                        <li><a href="#" class="hover:text-white transition">Wedding Flowers</a></li>
+                        <li><a href="#" class="hover:text-white transition">Birthday Bouquets</a></li>
+                        <li><a href="#" class="hover:text-white transition">Anniversary Gifts</a></li>
+                        <li><a href="#" class="hover:text-white transition">Sympathy Wreaths</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-lg font-bold mb-4 text-primary editable-content" data-key="footer_newsletter_title">Newsletter</h4>
-                    <p class="text-gray-400 text-sm mb-4 editable-content" data-key="footer_newsletter_desc">Subscribe for seasonal offers.</p>
+                    <h4 class="text-base sm:text-lg font-bold mb-3 sm:mb-4 text-primary">Newsletter</h4>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">Subscribe for seasonal offers.</p>
                     <div class="flex">
-                        <input type="email" placeholder="Your email" class="bg-gray-800 text-white px-4 py-2 rounded-l-md focus:outline-none w-full text-sm">
-                        <button class="bg-primary px-4 py-2 rounded-r-md hover:bg-secondary transition"><i class="fas fa-paper-plane"></i></button>
+                        <input type="email" placeholder="Your email" class="bg-gray-800 text-white px-3 sm:px-4 py-2 rounded-l-md focus:outline-none w-full text-xs sm:text-sm">
+                        <button class="bg-primary px-3 sm:px-4 py-2 rounded-r-md hover:bg-secondary transition">
+                            <i class="fas fa-paper-plane text-xs sm:text-sm"></i>
+                        </button>
                     </div>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-500 text-sm editable-content" data-key="footer_copyright">&copy; 2023 SunShine Creation. All rights reserved.</p>
-                <div class="flex space-x-6 mt-4 md:mt-0 text-gray-500 text-sm">
-                    <a href="#" class="hover:text-white editable-content" data-key="footer_privacy">Privacy Policy</a>
-                    <a href="#" class="hover:text-white editable-content" data-key="footer_terms">Terms of Service</a>
+            <div class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p class="text-gray-500 text-xs sm:text-sm text-center sm:text-left">&copy; 2023 SunShine Creation. All rights reserved.</p>
+                <div class="flex space-x-4 sm:space-x-6 text-gray-500 text-xs sm:text-sm">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Floating Buttons -->
-    <div id="floating-buttons" class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <a id="float-whatsapp" href="https://wa.me/94771234567" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 animate-pulse">
-            <i class="fab fa-whatsapp text-3xl"></i>
-        </a>
-        <a id="float-facebook" href="https://facebook.com" target="_blank" class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-700 transition transform hover:scale-110 hidden">
-            <i class="fab fa-facebook-f text-xl"></i>
-        </a>
-    </div>
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/94785391995" target="_blank" id="float-whatsapp" class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 bg-green-500 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 z-40 animate-pulse">
+        <i class="fab fa-whatsapp text-2xl sm:text-3xl"></i>
+    </a>
 
     <!-- Product Modal -->
-    <div id="product-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div id="product-modal" class="fixed inset-0 z-50 hidden overflow-y-auto p-4 sm:p-0" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen">
             <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onclick="closeProductModal()"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="sm:flex sm:items-start">
-                        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="rounded-lg overflow-hidden h-64 md:h-auto relative group">
-                                <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer" onclick="if(state.isAdmin) changeProductImage(state.currentModalProduct.id)">
-                                    <span class="text-white font-bold text-sm"><i class="fas fa-camera"></i> Change Image</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full max-w-2xl">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6">
+                    <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                        <div class="w-full sm:w-1/2 rounded-lg overflow-hidden h-48 sm:h-auto">
+                            <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+                        </div>
+                        <div class="w-full sm:w-1/2 flex flex-col justify-center">
+                            <h3 class="text-xl sm:text-2xl font-serif font-bold text-gray-900 mb-2" id="modal-title"></h3>
+                            <p class="text-primary font-bold text-lg sm:text-xl mb-3 sm:mb-4" id="modal-price"></p>
+                            <p class="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6" id="modal-desc"></p>
+                            
+                            <div class="flex items-center mb-4 sm:mb-6">
+                                <span class="mr-3 text-gray-700 text-sm">Quantity:</span>
+                                <div class="flex items-center border border-gray-300 rounded">
+                                    <button onclick="adjustModalQty(-1)" class="px-3 py-1 hover:bg-gray-100 text-sm">-</button>
+                                    <span id="modal-qty" class="px-3 py-1 border-l border-r border-gray-300 text-sm">1</span>
+                                    <button onclick="adjustModalQty(1)" class="px-3 py-1 hover:bg-gray-100 text-sm">+</button>
                                 </div>
                             </div>
-                            <div class="flex flex-col justify-center">
-                                <h3 class="text-2xl leading-6 font-serif font-bold text-gray-900 mb-2" id="modal-title"></h3>
-                                <p class="text-primary font-bold text-xl mb-4" id="modal-price"></p>
-                                <p class="text-gray-500 text-sm mb-6" id="modal-desc"></p>
-                                
-                                <div class="flex items-center mb-6">
-                                    <span class="mr-3 text-gray-700">Quantity:</span>
-                                    <div class="flex items-center border border-gray-300 rounded">
-                                        <button onclick="adjustModalQty(-1)" class="px-3 py-1 hover:bg-gray-100">-</button>
-                                        <span id="modal-qty" class="px-3 py-1 border-l border-r border-gray-300">1</span>
-                                        <button onclick="adjustModalQty(1)" class="px-3 py-1 hover:bg-gray-100">+</button>
-                                    </div>
-                                </div>
 
-                                <button onclick="addToCartFromModal()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition shadow-md">
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <button onclick="addToCartFromModal()" class="flex-1 bg-primary text-white py-2 sm:py-3 rounded-lg hover:bg-secondary transition shadow-md text-sm">
                                     Add to Cart
                                 </button>
+                                <a href="https://wa.me/94785391995" target="_blank" class="flex-1 bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition shadow-md text-center text-sm flex items-center justify-center gap-2">
+                                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="closeProductModal()">
+                <div class="bg-gray-50 px-4 py-3 flex justify-end">
+                    <button type="button" class="px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm" onclick="closeProductModal()">
                         Close
                     </button>
                 </div>
@@ -824,123 +541,41 @@
     </div>
 
     <!-- Cart Drawer -->
-    <div id="cart-drawer" class="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
-        <div class="p-6 bg-primary text-white flex justify-between items-center">
-            <h2 class="text-xl font-bold">Your Cart</h2>
-            <button onclick="toggleCart()" class="text-white hover:text-gray-200"><i class="fas fa-times"></i></button>
+    <div id="cart-drawer" class="fixed inset-y-0 right-0 w-full sm:max-w-xs bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 flex flex-col">
+        <div class="p-4 sm:p-6 bg-primary text-white flex justify-between items-center">
+            <h2 class="text-lg sm:text-xl font-bold">Your Cart</h2>
+            <button onclick="toggleCart()" class="text-white hover:text-gray-200">
+                <i class="fas fa-times text-lg"></i>
+            </button>
         </div>
-        <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
-            <div class="text-center text-gray-500 mt-10">Your cart is empty</div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+            <div class="text-center text-gray-500 mt-10 flex flex-col items-center">
+                <i class="fas fa-shopping-basket text-3xl sm:text-4xl mb-2 opacity-20"></i>
+                <p class="text-sm">Your cart is empty</p>
+            </div>
         </div>
-        <div class="p-6 border-t border-gray-200 bg-gray-50">
-            <div class="flex justify-between mb-4 text-lg font-bold text-gray-800">
+        <div class="p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
+            <div class="flex justify-between mb-4 text-base sm:text-lg font-bold text-gray-800">
                 <span>Total:</span>
                 <span id="cart-total">Rs. 0.00</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-secondary transition font-bold shadow-lg">
+            <button onclick="checkout()" class="w-full bg-primary text-white py-2 sm:py-3 rounded-lg hover:bg-secondary transition font-bold shadow-lg text-sm sm:text-base">
                 Checkout via WhatsApp
             </button>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-20 sm:bottom-24 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2 text-sm">
         <i class="fas fa-check-circle text-green-400"></i>
         <span id="toast-message">Item added to cart</span>
     </div>
 
-    <!-- Hidden File Input for Product Image Change -->
-    <input type="file" id="product-image-changer" accept="image/*" class="hidden" onchange="handleProductImageChange(this)">
-
+    <!-- JavaScript Logic -->
     <script>
-        // ==========================================
-        // LOCAL STORAGE MANAGEMENT
-        // ==========================================
-        
-        const STORAGE_KEY = 'sunshine_creation_data';
-        
-        // Default data (factory settings)
-        const defaultData = {
-            content: {
-                hero_welcome: "Welcome to SunShine Creation",
-                hero_title: "Fresh Flowers for Every Moment",
-                hero_subtitle: "Handcrafted bouquets delivered with love. Making your special occasions unforgettable with the beauty of nature.",
-                btn1_text: "Order Now",
-                btn2_text: "WhatsApp Us",
-                brand_name: "SunShine",
-                nav_home: "Home",
-                nav_shop: "Shop",
-                nav_about: "About",
-                nav_contact: "Contact",
-                feat1_title: "Island-wide Delivery",
-                feat1_desc: "Fast and reliable delivery across Sri Lanka to your doorstep.",
-                feat2_title: "Freshly Picked",
-                feat2_desc: "We source the freshest flowers daily from local growers.",
-                feat3_title: "Made with Love",
-                feat3_desc: "Each bouquet is carefully arranged by our expert florists.",
-                shop_title: "Our Collection",
-                about_title: "Our Story",
-                about_p1: "Founded in the heart of Sri Lanka, SunShine Creation began with a simple mission: to bring joy through the language of flowers. What started as a small home-based business has blossomed into a beloved floral destination.",
-                about_p2: "We believe that every bouquet tells a story. Whether it's a celebration of love, a birthday surprise, or a gesture of sympathy, our expert florists pour their passion into every arrangement.",
-                stat1_num: "10+",
-                stat1_text: "Years Experience",
-                stat2_num: "5000+",
-                stat2_text: "Happy Customers",
-                contact_title: "Get in Touch",
-                contact_subtitle: "Have a question or custom order? We'd love to hear from you.",
-                contact_visit_title: "Visit Us",
-                contact_address: "123 Flower Road, Colombo 07, Sri Lanka",
-                contact_call_title: "Call Us",
-                contact_phone: "+94 77 123 4567",
-                contact_hours: "Mon - Sat: 9:00 AM - 6:00 PM",
-                contact_email_title: "Email Us",
-                contact_email: "hello@sunshinecreation.lk",
-                footer_brand: "SunShine Creation",
-                footer_desc: "Bringing nature's beauty to your doorstep. Premium floral arrangements for every occasion in Sri Lanka.",
-                footer_links_title: "Quick Links",
-                footer_link_home: "Home",
-                footer_link_shop: "Shop",
-                footer_link_about: "About Us",
-                footer_link_contact: "Contact",
-                footer_cat_title: "Categories",
-                footer_cat1: "Wedding Flowers",
-                footer_cat2: "Birthday Bouquets",
-                footer_cat3: "Anniversary Gifts",
-                footer_cat4: "Sympathy Wreaths",
-                footer_newsletter_title: "Newsletter",
-                footer_newsletter_desc: "Subscribe for seasonal offers.",
-                footer_copyright: "© 2023 SunShine Creation. All rights reserved.",
-                footer_privacy: "Privacy Policy",
-                footer_terms: "Terms of Service"
-            },
-            links: {
-                whatsapp: "94771234567",
-                whatsapp_msg: "Hello! I'm interested in your flowers.",
-                facebook: "https://facebook.com",
-                instagram: "https://instagram.com",
-                btn1_link: "#shop",
-                btn2_link: "https://wa.me/94771234567",
-                footer_fb: "#",
-                footer_ig: "#",
-                footer_wa: "#"
-            },
-            images: {
-                hero: "https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop",
-                shop: "",
-                about: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop"
-            },
-            theme: {
-                primary: "#064e3b",
-                secondary: "#065f46",
-                bg: "#f9fafb",
-                heroOpacity: 40,
-                shopOpacity: 92,
-                shopBgEnabled: false
-            },
-            buttons: {
-                showWhatsapp: true,
-                showFacebook: false
-            },
+        // --- Data State ---
+        const state = {
+            cart: [],
             products: [
                 {
                     id: 1,
@@ -990,80 +625,17 @@
                     image: "https://images.unsplash.com/photo-1523694576729-dc99e9c0f9b4?q=80&w=800&auto=format&fit=crop",
                     desc: "Exotic birds of paradise and orchids for a unique and vibrant gift."
                 }
-            ]
-        };
-
-        // Current state (loaded from localStorage or defaults)
-        let state = {
-            isAdmin: false,
-            cart: [],
+            ],
             currentModalProduct: null,
-            currentModalQty: 1,
-            currentEditProductId: null
+            currentModalQty: 1
         };
 
-        // Load data from localStorage
-        function loadFromStorage() {
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    // Merge with defaults to ensure all keys exist
-                    return {
-                        content: { ...defaultData.content, ...parsed.content },
-                        links: { ...defaultData.links, ...parsed.links },
-                        images: { ...defaultData.images, ...parsed.images },
-                        theme: { ...defaultData.theme, ...parsed.theme },
-                        buttons: { ...defaultData.buttons, ...parsed.buttons },
-                        products: parsed.products || defaultData.products
-                    };
-                }
-            } catch (e) {
-                console.error('Error loading from storage:', e);
-            }
-            return JSON.parse(JSON.stringify(defaultData)); // Deep copy defaults
-        }
+        // WhatsApp Number - Updated
+        const WHATSAPP_NUMBER = "94785391995";
 
-        // Save data to localStorage
-        function saveToStorage() {
-            try {
-                const dataToSave = {
-                    content: appData.content,
-                    links: appData.links,
-                    images: appData.images,
-                    theme: appData.theme,
-                    buttons: appData.buttons,
-                    products: appData.products
-                };
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
-                
-                // Visual feedback
-                showSaveIndicator();
-            } catch (e) {
-                console.error('Error saving to storage:', e);
-                showToast('Error saving changes!');
-            }
-        }
-
-        // Show save indicator in admin panel
-        function showSaveIndicator() {
-            const indicator = document.getElementById('save-status');
-            indicator.innerHTML = '<i class="fas fa-check"></i> Saved';
-            indicator.classList.add('save-indicator');
-            setTimeout(() => {
-                indicator.classList.remove('save-indicator');
-            }, 2000);
-        }
-
-        // Global app data
-        let appData = loadFromStorage();
-
-        // ==========================================
-        // INITIALIZATION
-        // ==========================================
-
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Remove loader
+            // Remove Loader
             setTimeout(() => {
                 const loader = document.getElementById('loader');
                 loader.style.opacity = '0';
@@ -1071,341 +643,81 @@
                 initAnimations();
             }, 1500);
 
-            // Initialize everything
-            applyAllData();
             renderProducts();
             updateCartCount();
-            renderAdminProductsList();
             
-            // Google Translate
+            // Google Translate Init
             window.googleTranslateElementInit = () => {
-                new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,si,ta', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en', 
+                    includedLanguages: 'en,si,ta', 
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                }, 'google_translate_element');
             };
+            
             const script = document.createElement('script');
             script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
             document.head.appendChild(script);
         });
 
-        // Apply all saved data to the page
-        function applyAllData() {
-            // Apply content
-            Object.keys(appData.content).forEach(key => {
-                const elements = document.querySelectorAll(`[data-key="${key}"]`);
-                elements.forEach(el => {
-                    const icon = el.querySelector('i');
-                    if (icon && el.innerHTML.includes('class="')) {
-                        // Preserve icon for buttons
-                        const text = appData.content[key];
-                        el.innerHTML = text + ' ' + icon.outerHTML;
-                    } else {
-                        el.innerText = appData.content[key];
-                    }
-                });
-            });
-
-            // Apply links
-            applyLinks();
-
-            // Apply images
-            applyImages();
-
-            // Apply theme
-            applyTheme();
-
-            // Apply button visibility
-            toggleFloatingButton('whatsapp', appData.buttons.showWhatsapp);
-            toggleFloatingButton('facebook', appData.buttons.showFacebook);
-            document.getElementById('show-whatsapp-btn').checked = appData.buttons.showWhatsapp;
-            document.getElementById('show-facebook-btn').checked = appData.buttons.showFacebook;
-
-            // Load values into admin inputs
-            loadAdminValues();
-        }
-
-        // Load values into admin panel inputs
-        function loadAdminValues() {
-            // Content
-            Object.keys(appData.content).forEach(key => {
-                const input = document.getElementById(`edit-${key.replace(/_/g, '-')}`);
-                if (input) input.value = appData.content[key];
-            });
-
-            // Links
-            document.getElementById('edit-whatsapp-num').value = appData.links.whatsapp;
-            document.getElementById('edit-whatsapp-msg').value = appData.links.whatsapp_msg;
-            document.getElementById('edit-facebook-url').value = appData.links.facebook;
-            document.getElementById('edit-instagram-url').value = appData.links.instagram;
-            document.getElementById('edit-btn2-link').value = appData.links.btn2_link;
-            document.getElementById('edit-footer-fb').value = appData.links.footer_fb;
-            document.getElementById('edit-footer-ig').value = appData.links.footer_ig;
-            document.getElementById('edit-footer-wa').value = appData.links.footer_wa;
-
-            // Theme colors
-            document.getElementById('primary-color-picker').value = appData.theme.primary;
-            document.getElementById('secondary-color-picker').value = appData.theme.secondary;
-            document.getElementById('bg-color-picker').value = appData.theme.bg;
-            document.getElementById('hero-opacity').value = appData.theme.heroOpacity;
-            document.getElementById('shop-opacity').value = appData.theme.shopOpacity;
-            document.getElementById('shop-bg-enable').checked = appData.theme.shopBgEnabled;
-
-            // Image previews
-            document.getElementById('preview-hero-image').src = appData.images.hero;
-            document.getElementById('preview-about-image').src = appData.images.about;
-            if (appData.images.shop) {
-                document.getElementById('preview-shop-image').src = appData.images.shop;
+        // --- Mobile Menu Functions ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
             } else {
-                document.getElementById('preview-shop-image').style.background = '#f3f4f6';
-            }
-
-            // Update display values
-            document.getElementById('primary-color-value').innerText = appData.theme.primary;
-            document.getElementById('secondary-color-value').innerText = appData.theme.secondary;
-            document.getElementById('bg-color-value').innerText = appData.theme.bg;
-            document.getElementById('hero-opacity-value').innerText = appData.theme.heroOpacity + '%';
-            document.getElementById('shop-opacity-value').innerText = appData.theme.shopOpacity + '%';
-        }
-
-        // ==========================================
-        // CONTENT MANAGEMENT
-        // ==========================================
-
-        function updateContent(key, value) {
-            appData.content[key] = value;
-            
-            // Update all elements with this key
-            document.querySelectorAll(`[data-key="${key}"]`).forEach(el => {
-                const icon = el.querySelector('i');
-                if (icon && el.innerHTML.includes('class="')) {
-                    el.innerHTML = value + ' ' + icon.outerHTML;
-                } else {
-                    el.innerText = value;
-                }
-            });
-
-            saveToStorage();
-            showToast('Content saved!');
-        }
-
-        function updateLink(type, value) {
-            appData.links[type] = value;
-            applyLinks();
-            saveToStorage();
-            showToast('Link saved!');
-        }
-
-        function applyLinks() {
-            const waLink = `https://wa.me/${appData.links.whatsapp}`;
-            document.getElementById('float-whatsapp').href = waLink;
-            document.getElementById('hero-btn2').href = waLink;
-            document.getElementById('social-wa').href = appData.links.footer_wa || waLink;
-            document.getElementById('float-facebook').href = appData.links.facebook;
-            document.getElementById('social-fb').href = appData.links.footer_fb || appData.links.facebook;
-            document.getElementById('social-ig').href = appData.links.footer_ig || appData.links.instagram;
-            document.getElementById('hero-btn1').href = appData.links.btn1_link;
-        }
-
-        function toggleFloatingButton(type, show) {
-            appData.buttons[`show${type.charAt(0).toUpperCase() + type.slice(1)}`] = show;
-            if (type === 'whatsapp') {
-                document.getElementById('float-whatsapp').style.display = show ? 'flex' : 'none';
-            } else if (type === 'facebook') {
-                document.getElementById('float-facebook').classList.toggle('hidden', !show);
-            }
-            saveToStorage();
-        }
-
-        // ==========================================
-        // IMAGE MANAGEMENT
-        // ==========================================
-
-        function handleImageUpload(input, type) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    appData.images[type] = e.target.result;
-                    
-                    // Update preview
-                    const preview = document.getElementById(`preview-${type}-image`);
-                    preview.src = e.target.result;
-                    preview.style.background = '';
-
-                    // Apply to page
-                    if (type === 'hero') {
-                        document.querySelector('.hero-pattern').style.backgroundImage = `url('${e.target.result}')`;
-                    } else if (type === 'about') {
-                        document.getElementById('about-image').src = e.target.result;
-                    } else if (type === 'shop') {
-                        document.getElementById('shop').style.backgroundImage = `url('${e.target.result}')`;
-                        appData.theme.shopBgEnabled = true;
-                        document.getElementById('shop-bg-enable').checked = true;
-                        updateShopOverlay();
-                    }
-
-                    saveToStorage();
-                    showToast('Image saved!');
-                };
-                reader.readAsDataURL(input.files[0]);
+                closeMobileMenu();
             }
         }
 
-        function toggleShopBackground(enabled) {
-            appData.theme.shopBgEnabled = enabled;
-            const shopSection = document.getElementById('shop');
-            if (enabled && appData.images.shop) {
-                shopSection.style.backgroundImage = `url('${appData.images.shop}')`;
-            } else {
-                shopSection.style.backgroundImage = 'none';
-            }
-            updateShopOverlay();
-            saveToStorage();
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            menu.classList.add('hidden');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
         }
 
-        function applyImages() {
-            // Hero
-            document.querySelector('.hero-pattern').style.backgroundImage = `url('${appData.images.hero}')`;
-            
-            // About
-            document.getElementById('about-image').src = appData.images.about;
-            
-            // Shop
-            if (appData.theme.shopBgEnabled && appData.images.shop) {
-                document.getElementById('shop').style.backgroundImage = `url('${appData.images.shop}')`;
-            }
-        }
-
-        // ==========================================
-        // THEME MANAGEMENT
-        // ==========================================
-
-        function updateThemeColor(type, value) {
-            appData.theme[type] = value;
-            
-            if (type === 'primary') {
-                document.documentElement.style.setProperty('--primary', value);
-                document.querySelectorAll('.bg-primary').forEach(el => el.style.backgroundColor = value);
-                document.querySelectorAll('.text-primary').forEach(el => el.style.color = value);
-                document.querySelectorAll('.border-primary').forEach(el => el.style.borderColor = value);
-                document.getElementById('primary-color-value').innerText = value;
-            } else if (type === 'secondary') {
-                document.querySelectorAll('.hover\\:bg-secondary').forEach(el => {
-                    el.onmouseenter = () => el.style.backgroundColor = value;
-                    el.onmouseleave = () => el.style.backgroundColor = appData.theme.primary;
-                });
-                document.getElementById('secondary-color-value').innerText = value;
-            } else if (type === 'bg') {
-                document.body.style.backgroundColor = value;
-                document.getElementById('bg-color-value').innerText = value;
-            }
-
-            saveToStorage();
-            showToast('Theme saved!');
-        }
-
-        function updateHeroOpacity(value) {
-            appData.theme.heroOpacity = parseInt(value);
-            document.getElementById('hero-overlay').style.backgroundColor = `rgba(0, 0, 0, ${value / 100})`;
-            document.getElementById('hero-opacity-value').innerText = value + '%';
-            saveToStorage();
-        }
-
-        function updateShopOpacity(value) {
-            appData.theme.shopOpacity = parseInt(value);
-            updateShopOverlay();
-            document.getElementById('shop-opacity-value').innerText = value + '%';
-            saveToStorage();
-        }
-
-        function updateShopOverlay() {
-            const opacity = appData.theme.shopOpacity / 100;
-            document.getElementById('shop-overlay').style.background = `rgba(249, 250, 251, ${opacity})`;
-        }
-
-        function applyTheme() {
-            updateThemeColor('primary', appData.theme.primary);
-            updateThemeColor('secondary', appData.theme.secondary);
-            document.body.style.backgroundColor = appData.theme.bg;
-            document.getElementById('hero-overlay').style.backgroundColor = `rgba(0, 0, 0, ${appData.theme.heroOpacity / 100})`;
-            updateShopOverlay();
-        }
-
-        function resetTheme() {
-            appData.theme = JSON.parse(JSON.stringify(defaultData.theme));
-            appData.images.shop = "";
-            document.getElementById('shop').style.backgroundImage = 'none';
-            appData.theme.shopBgEnabled = false;
-            applyTheme();
-            loadAdminValues();
-            saveToStorage();
-            showToast('Theme reset to default!');
-        }
-
-        // ==========================================
-        // PRODUCT MANAGEMENT
-        // ==========================================
-
+        // --- Product Logic ---
         function renderProducts(filter = 'all') {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
 
             const filtered = filter === 'all' 
-                ? appData.products 
-                : appData.products.filter(p => p.category === filter);
+                ? state.products 
+                : state.products.filter(p => p.category === filter);
 
             filtered.forEach((product, index) => {
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-xl overflow-hidden shadow-lg card-hover transition duration-300 flex flex-col h-full gs-reveal-up';
                 card.style.animationDelay = `${index * 100}ms`;
-                
-                const editClass = state.isAdmin ? 'admin-editable' : '';
 
                 card.innerHTML = `
-                    <div class="relative h-64 overflow-hidden group cursor-pointer" onclick="openProductModal(${product.id})">
+                    <div class="relative h-48 sm:h-64 overflow-hidden group cursor-pointer" onclick="openProductModal(${product.id})">
                         <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition duration-300 flex items-center justify-center">
-                            <span class="text-white border border-white px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-4 group-hover:translate-y-0">Quick View</span>
+                            <span class="text-white border border-white px-3 sm:px-4 py-1 sm:py-2 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 transform translate-y-4 group-hover:translate-y-0 text-xs sm:text-sm">Quick View</span>
                         </div>
-                        ${state.isAdmin ? `<div class="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold cursor-pointer" onclick="event.stopPropagation(); changeProductImage(${product.id})"><i class="fas fa-camera"></i> Change</div>` : ''}
-                        <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold text-primary shadow-md uppercase tracking-wider ${state.isAdmin ? 'mt-8' : ''}">
+                        <div class="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold text-primary shadow-md uppercase tracking-wider">
                             ${product.category}
                         </div>
                     </div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-xl font-serif font-bold text-gray-800 ${editClass}" onclick="state.isAdmin ? editProductText(${product.id}, 'name') : null">${product.name}</h3>
-                        </div>
-                        <p class="text-gray-500 text-sm mb-4 flex-1 ${editClass}" onclick="state.isAdmin ? editProductText(${product.id}, 'desc') : null">${product.desc}</p>
-                        <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                            <span class="text-2xl font-bold text-primary ${editClass}" onclick="state.isAdmin ? editProductPrice(${product.id}) : null">Rs. ${product.price.toLocaleString()}</span>
-                            <button onclick="event.stopPropagation(); addToCart(${product.id})" class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition shadow-md transform active:scale-90">
-                                <i class="fas fa-plus"></i>
+                    <div class="p-4 sm:p-6 flex-1 flex flex-col">
+                        <h3 class="text-base sm:text-xl font-serif font-bold text-gray-800 mb-1 sm:mb-2">${product.name}</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm mb-3 sm:mb-4 flex-1 line-clamp-2">${product.desc}</p>
+                        <div class="flex items-center justify-between mt-auto pt-3 sm:pt-4 border-t border-gray-100">
+                            <span class="text-lg sm:text-2xl font-bold text-primary">Rs. ${product.price.toLocaleString()}</span>
+                            <button onclick="event.stopPropagation(); addToCart(${product.id})" class="bg-primary hover:bg-secondary text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition shadow-md transform active:scale-90">
+                                <i class="fas fa-plus text-xs sm:text-sm"></i>
                             </button>
                         </div>
                     </div>
                 `;
                 grid.appendChild(card);
-            });
-        }
-
-        function renderAdminProductsList() {
-            const container = document.getElementById('admin-products-list');
-            container.innerHTML = '';
-            
-            appData.products.forEach(product => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center gap-3 p-2 bg-white rounded border hover:shadow-md transition cursor-pointer group';
-                div.innerHTML = `
-                    <img src="${product.image}" class="product-image-preview cursor-pointer" onclick="changeProductImage(${product.id})" title="Click to change image">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-800 truncate">${product.name}</p>
-                        <p class="text-xs text-gray-500">Rs. ${product.price.toLocaleString()} • ${product.category}</p>
-                    </div>
-                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="editProductText(${product.id}, 'name')" class="p-1 text-blue-500 hover:bg-blue-50 rounded" title="Edit name"><i class="fas fa-edit"></i></button>
-                        <button onclick="editProductPrice(${product.id})" class="p-1 text-green-500 hover:bg-green-50 rounded" title="Edit price"><i class="fas fa-tag"></i></button>
-                        <button onclick="deleteProduct(${product.id})" class="p-1 text-red-500 hover:bg-red-50 rounded" title="Delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                container.appendChild(div);
             });
         }
 
@@ -1420,110 +732,9 @@
             renderProducts(category);
         }
 
-        function editProductText(id, field) {
-            const product = appData.products.find(p => p.id === id);
-            const newVal = prompt(`Edit ${field}:`, product[field]);
-            if (newVal !== null && newVal.trim() !== '') {
-                product[field] = newVal.trim();
-                renderProducts();
-                renderAdminProductsList();
-                saveToStorage();
-                showToast('Product updated!');
-            }
-        }
-
-        function editProductPrice(id) {
-            const product = appData.products.find(p => p.id === id);
-            const newVal = prompt("Edit Price (LKR):", product.price);
-            if (newVal !== null && !isNaN(newVal) && newVal > 0) {
-                product.price = parseInt(newVal);
-                renderProducts();
-                renderAdminProductsList();
-                saveToStorage();
-                showToast('Price updated!');
-            }
-        }
-
-        function changeProductImage(productId) {
-            state.currentEditProductId = productId;
-            document.getElementById('product-image-changer').click();
-        }
-
-        function handleProductImageChange(input) {
-            if (input.files && input.files[0] && state.currentEditProductId) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const product = appData.products.find(p => p.id === state.currentEditProductId);
-                    if (product) {
-                        product.image = e.target.result;
-                        renderProducts();
-                        renderAdminProductsList();
-                        
-                        if (state.currentModalProduct && state.currentModalProduct.id === state.currentEditProductId) {
-                            document.getElementById('modal-img').src = e.target.result;
-                        }
-                        
-                        saveToStorage();
-                        showToast('Product image saved!');
-                    }
-                    state.currentEditProductId = null;
-                    input.value = '';
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function addNewProduct() {
-            const name = prompt("Product Name:");
-            if (!name) return;
-            
-            const price = prompt("Price (LKR):");
-            if (!price || isNaN(price)) return;
-            
-            const categories = ['love', 'birthday', 'wedding', 'sympathy'];
-            const category = prompt(`Category (${categories.join('/')}):`, "love");
-            if (!categories.includes(category)) {
-                showToast('Invalid category!');
-                return;
-            }
-            
-            const newProduct = {
-                id: Date.now(),
-                name: name.trim(),
-                price: parseInt(price),
-                category: category,
-                image: 'https://images.unsplash.com/photo-1487530811176-3780de880c2d?q=80&w=800&auto=format&fit=crop',
-                desc: 'Beautiful floral arrangement. Contact us for more details.'
-            };
-            
-            appData.products.push(newProduct);
-            renderProducts();
-            renderAdminProductsList();
-            saveToStorage();
-            showToast('New product added!');
-        }
-
-        function deleteProduct(id) {
-            if (!confirm('Are you sure you want to delete this product?')) return;
-            
-            const index = appData.products.findIndex(p => p.id === id);
-            if (index > -1) {
-                appData.products.splice(index, 1);
-                renderProducts();
-                renderAdminProductsList();
-                saveToStorage();
-                showToast('Product deleted!');
-            }
-        }
-
-        // ==========================================
-        // MODAL & CART
-        // ==========================================
-
+        // --- Modal Logic ---
         function openProductModal(id) {
-            if (state.isAdmin && event.target.closest('.bg-yellow-400')) return;
-            
-            const product = appData.products.find(p => p.id === id);
+            const product = state.products.find(p => p.id === id);
             state.currentModalProduct = product;
             state.currentModalQty = 1;
 
@@ -1534,10 +745,12 @@
             document.getElementById('modal-qty').innerText = 1;
 
             document.getElementById('product-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeProductModal() {
             document.getElementById('product-modal').classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         function adjustModalQty(change) {
@@ -1550,30 +763,38 @@
 
         function addToCartFromModal() {
             if (!state.currentModalProduct) return;
-            for (let i = 0; i < state.currentModalQty; i++) {
+            
+            for(let i=0; i<state.currentModalQty; i++) {
                 addToCart(state.currentModalProduct.id, false);
             }
             closeProductModal();
             showToast(`Added ${state.currentModalQty} items to cart`);
         }
 
+        // --- Cart Logic ---
         function addToCart(id, showMsg = true) {
-            const product = appData.products.find(p => p.id === id);
-            state.cart.push({...product}); // Clone to avoid reference issues
+            const product = state.products.find(p => p.id === id);
+            state.cart.push({...product});
             updateCartCount();
-            renderCartItems();
-            if (showMsg) showToast('Added to cart');
+            if(showMsg) showToast('Added to cart');
         }
 
         function updateCartCount() {
-            document.getElementById('cart-count').innerText = state.cart.length;
+            const count = state.cart.length;
+            document.getElementById('cart-count').innerText = count;
+            const mobileCount = document.getElementById('cart-count-mobile');
+            if (mobileCount) mobileCount.innerText = count;
         }
 
         function toggleCart() {
             const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('translate-x-full');
-            if (!drawer.classList.contains('translate-x-full')) {
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
                 renderCartItems();
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('translate-x-full');
+                document.body.style.overflow = '';
             }
         }
 
@@ -1581,7 +802,12 @@
             const container = document.getElementById('cart-items');
             
             if (state.cart.length === 0) {
-                container.innerHTML = '<div class="text-center text-gray-500 mt-10 flex flex-col items-center"><i class="fas fa-shopping-basket text-4xl mb-2 opacity-20"></i>Your cart is empty</div>';
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 mt-10 flex flex-col items-center">
+                        <i class="fas fa-shopping-basket text-3xl sm:text-4xl mb-2 opacity-20"></i>
+                        <p class="text-sm">Your cart is empty</p>
+                    </div>
+                `;
                 document.getElementById('cart-total').innerText = 'Rs. 0.00';
                 return;
             }
@@ -1592,20 +818,22 @@
             
             container.innerHTML = '';
             Object.keys(counts).forEach(id => {
-                const product = appData.products.find(p => p.id == id);
+                const product = state.products.find(p => p.id == id);
                 const qty = counts[id];
                 const itemTotal = product.price * qty;
                 total += itemTotal;
 
                 const div = document.createElement('div');
-                div.className = 'flex items-center gap-4 bg-gray-50 p-3 rounded-lg';
+                div.className = 'flex items-center gap-3 sm:gap-4 bg-gray-50 p-2 sm:p-3 rounded-lg';
                 div.innerHTML = `
-                    <img src="${product.image}" class="w-16 h-16 rounded object-cover">
-                    <div class="flex-1">
-                        <h4 class="font-bold text-sm text-gray-800">${product.name}</h4>
+                    <img src="${product.image}" class="w-12 h-12 sm:w-16 sm:h-16 rounded object-cover">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-xs sm:text-sm text-gray-800 truncate">${product.name}</h4>
                         <p class="text-xs text-gray-500">Rs. ${product.price.toLocaleString()} x ${qty}</p>
                     </div>
-                    <button onclick="removeFromCart(${id})" class="text-red-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
+                    <button onclick="removeFromCart(${id})" class="text-red-400 hover:text-red-600 p-1">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
                 `;
                 container.appendChild(div);
             });
@@ -1625,138 +853,27 @@
         function checkout() {
             if (state.cart.length === 0) return;
             
-            let message = `Hello SunShine Creation! ${appData.links.whatsapp_msg}%0A%0AI would like to order:%0A%0A`;
+            let message = `Hello SunShine Creation! I would like to order:%0A%0A`;
             const counts = {};
             state.cart.forEach(x => { counts[x.id] = (counts[x.id] || 0) + 1; });
             
             Object.keys(counts).forEach(id => {
-                const product = appData.products.find(p => p.id == id);
+                const product = state.products.find(p => p.id == id);
                 message += `- ${product.name} (Qty: ${counts[id]})%0A`;
             });
             
             const total = state.cart.reduce((sum, item) => sum + item.price, 0);
             message += `%0ATotal: Rs. ${total.toLocaleString()}`;
             
-            window.open(`https://wa.me/${appData.links.whatsapp}?text=${message}`, '_blank');
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
         }
 
-        // ==========================================
-        // ADMIN PANEL FUNCTIONS
-        // ==========================================
-
-        function toggleAdminLogin() {
-            const modal = document.getElementById('admin-modal');
-            const content = document.getElementById('admin-modal-content');
-            
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            } else {
-                content.classList.remove('scale-100', 'opacity-100');
-                content.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
-
-        function handleAdminLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('admin-user').value;
-            const pass = document.getElementById('admin-pass').value;
-            
-            if (user === 'admin' && pass === 'admin') {
-                state.isAdmin = true;
-                toggleAdminLogin();
-                document.getElementById('admin-panel').classList.remove('translate-x-full');
-                renderProducts();
-                showToast('Welcome to Admin Panel!');
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        function toggleAdminMode() {
-            state.isAdmin = false;
-            document.getElementById('admin-panel').classList.add('translate-x-full');
-            renderProducts();
-            showToast('Admin Mode Deactivated');
-        }
-
-        function switchAdminTab(tabName) {
-            ['content', 'images', 'products', 'appearance', 'links'].forEach(tab => {
-                document.getElementById(`panel-${tab}`).classList.add('hidden');
-                document.getElementById(`tab-${tab}`).classList.remove('active');
-            });
-            document.getElementById(`panel-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-        }
-
-        // ==========================================
-        // DATA EXPORT/IMPORT
-        // ==========================================
-
-        function exportData() {
-            const dataStr = JSON.stringify(appData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `sunshine_creation_backup_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Data exported!');
-        }
-
-        function importData(input) {
-            const file = input.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    
-                    // Validate structure
-                    if (imported.content && imported.products && imported.theme) {
-                        if (confirm('This will replace all current data. Continue?')) {
-                            appData = imported;
-                            saveToStorage();
-                            location.reload(); // Reload to apply all changes
-                        }
-                    } else {
-                        alert('Invalid data file!');
-                    }
-                } catch (err) {
-                    alert('Error reading file!');
-                }
-            };
-            reader.readAsText(file);
-            input.value = '';
-        }
-
-        function resetAllData() {
-            if (confirm('WARNING: This will delete ALL saved changes and restore defaults. This cannot be undone! Continue?')) {
-                localStorage.removeItem(STORAGE_KEY);
-                location.reload();
-            }
-        }
-
-        // ==========================================
-        // UTILITIES
-        // ==========================================
-
+        // --- Utilities ---
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').innerText = msg;
             toast.classList.remove('opacity-0');
             setTimeout(() => toast.classList.add('opacity-0'), 3000);
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
         function changeLanguage(lang) {
@@ -1774,26 +891,62 @@
             e.target.reset();
         }
 
+        // --- Animations ---
         function initAnimations() {
             gsap.registerPlugin(ScrollTrigger);
 
             gsap.utils.toArray('.gs-reveal-up').forEach(element => {
                 gsap.fromTo(element, 
-                    { y: 50, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.8, ease: "power2.out", scrollTrigger: { trigger: element, start: "top 85%" } }
+                    { y: 30, opacity: 0 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.6,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 90%",
+                        }
+                    }
                 );
             });
 
             gsap.utils.toArray('.gs-reveal').forEach(element => {
                 gsap.fromTo(element, 
                     { opacity: 0, scale: 0.95 },
-                    { opacity: 1, scale: 1, duration: 1, ease: "power2.out", scrollTrigger: { trigger: element, start: "top 80%" } }
+                    {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.8,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 85%",
+                        }
+                    }
                 );
             });
             
-            gsap.from(".gs-reveal-left", { x: -50, opacity: 0, duration: 1, scrollTrigger: { trigger: ".gs-reveal-left", start: "top 75%" } });
-            gsap.from(".gs-reveal-right", { x: 50, opacity: 0, duration: 1, scrollTrigger: { trigger: ".gs-reveal-right", start: "top 75%" } });
+            if (window.innerWidth > 768) {
+                gsap.from(".gs-reveal-left", {
+                    x: -30, opacity: 0, duration: 0.8, scrollTrigger: { trigger: ".gs-reveal-left", start: "top 80%" }
+                });
+                gsap.from(".gs-reveal-right", {
+                    x: 30, opacity: 0, duration: 0.8, scrollTrigger: { trigger: ".gs-reveal-right", start: "top 80%" }
+                });
+            }
         }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeProductModal();
+                const drawer = document.getElementById('cart-drawer');
+                if (!drawer.classList.contains('translate-x-full')) {
+                    toggleCart();
+                }
+            }
+        });
     </script>
 </body>
 </html>
