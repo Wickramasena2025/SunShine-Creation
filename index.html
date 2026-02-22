@@ -6,19 +6,19 @@
     <title>SunShine Creation | Fresh Flowers for Every Moment</title>
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com  "></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com  ">
-    <link rel="preconnect" href="https://fonts.gstatic.com  " crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital  ,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css  ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- GSAP for Animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js  "></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js  "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -86,8 +86,7 @@
             align-items: center;
             transition: opacity 0.5s ease;
         }
-
-        .goog-te-banner-frame { display: none !important; }
+        
         body { top: 0px !important; }
         
         ::-webkit-scrollbar { width: 10px; }
@@ -171,9 +170,6 @@
         </div>
     </div>
 
-    <!-- Google Translate Element (Hidden) -->
-    <div id="google_translate_element" class="hidden"></div>
-
     <!-- Navigation -->
     <nav class="fixed w-full z-50 glass-nav transition-all duration-300 dark-transition dark:bg-gray-900" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -196,18 +192,6 @@
                         <i class="fas fa-sun text-xl dark:hidden"></i>
                         <i class="fas fa-moon text-xl hidden dark:block"></i>
                     </button>
-
-                    <!-- Language Selector -->
-                    <div class="relative group">
-                        <button class="text-primary hover:text-secondary font-medium flex items-center gap-1 text-sm dark:text-green-400">
-                            <i class="fas fa-globe"></i> <span id="current-lang">EN</span>
-                        </button>
-                        <div class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 hidden group-hover:block border border-gray-100 z-50 dark:bg-gray-800 dark:border-gray-700">
-                            <button onclick="changeLanguage('en')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left dark:text-gray-300 dark:hover:bg-gray-700">English</button>
-                            <button onclick="changeLanguage('si')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left dark:text-gray-300 dark:hover:bg-gray-700">Sinhala</button>
-                            <button onclick="changeLanguage('ta')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left dark:text-gray-300 dark:hover:bg-gray-700">Tamil</button>
-                        </div>
-                    </div>
 
                     <!-- Cart Icon -->
                     <div class="relative cursor-pointer" onclick="toggleCart()">
@@ -242,22 +226,12 @@
                 <a href="#shop" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md dark:text-gray-300 dark:hover:bg-gray-800">Shop</a>
                 <a href="#about" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md dark:text-gray-300 dark:hover:bg-gray-800">About</a>
                 <a href="#contact" onclick="closeMobileMenu()" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md dark:text-gray-300 dark:hover:bg-gray-800">Contact</a>
-                
-                <!-- Mobile Language Selector -->
-                <div class="border-t border-gray-100 pt-2 mt-2 dark:border-gray-700">
-                    <p class="px-3 py-2 text-xs text-gray-500 uppercase tracking-wider dark:text-gray-400">Select Language</p>
-                    <div class="flex gap-2 px-3">
-                        <button onclick="changeLanguage('en'); closeMobileMenu()" class="flex-1 py-2 text-sm border rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 dark:text-gray-300">English</button>
-                        <button onclick="changeLanguage('si'); closeMobileMenu()" class="flex-1 py-2 text-sm border rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 dark:text-gray-300">Sinhala</button>
-                        <button onclick="changeLanguage('ta'); closeMobileMenu()" class="flex-1 py-2 text-sm border rounded hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 dark:text-gray-300">Tamil</button>
-                    </div>
-                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="relative min-h-screen flex items-center justify-center hero-pattern" style="background-image: url('https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop  ');">
+    <section id="home" class="relative min-h-screen flex items-center justify-center hero-pattern" style="background-image: url('https://images.unsplash.com/photo-1563241527-3004b7be025f?q=80&w=2070&auto=format&fit=crop');">
         <div class="absolute inset-0 bg-black bg-opacity-40" id="hero-overlay"></div>
         <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto gs-reveal py-20">
             <span class="text-white text-sm sm:text-lg md:text-xl font-medium tracking-[0.2em] uppercase mb-4 block text-shadow">Welcome to SunShine Creation</span>
@@ -271,7 +245,7 @@
                 <a href="#shop" class="px-6 sm:px-8 py-3 sm:py-4 bg-primary hover:bg-secondary text-white font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
                     Order Now <i class="fas fa-arrow-right"></i>
                 </a>
-                <a href="https://wa.me/94785391995  " target="_blank" class="px-6 sm:px-8 py-3 sm:py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
+                <a href="https://wa.me/94785391995" target="_blank" class="px-6 sm:px-8 py-3 sm:py-4 bg-white hover:bg-gray-100 text-primary font-semibold rounded-full transition transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base">
                     <i class="fab fa-whatsapp text-lg sm:text-xl"></i> WhatsApp Us
                 </a>
             </div>
@@ -344,7 +318,7 @@
                     <div class="relative">
                         <div class="absolute -top-2 -left-2 sm:-top-4 sm:-left-4 w-16 h-16 sm:w-24 sm:h-24 bg-primary rounded-full opacity-20"></div>
                         <div class="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 w-20 h-20 sm:w-32 sm:h-32 bg-secondary rounded-full opacity-20"></div>
-                        <img id="about-image" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop  " alt="Florist at work" class="relative rounded-2xl shadow-2xl w-full object-cover h-64 sm:h-80 lg:h-[500px]">
+                        <img id="about-image" src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop" alt="Florist at work" class="relative rounded-2xl shadow-2xl w-full object-cover h-64 sm:h-80 lg:h-[500px]">
                     </div>
                 </div>
                 <div class="lg:w-1/2 gs-reveal-right w-full">
@@ -373,7 +347,7 @@
 
     <!-- Contact Section -->
     <section id="contact" class="py-12 sm:py-20 bg-primary text-white relative dark:bg-gray-900 dark-transition">
-        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png  ')]"></div>
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center mb-8 sm:mb-16">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-4">Get in Touch</h2>
@@ -416,19 +390,19 @@
 
                     <!-- Socials -->
                     <div class="flex space-x-3 sm:space-x-4 pt-2 sm:pt-4">
-                        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr  " target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr" target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
                             <i class="fab fa-facebook-f text-sm sm:text-base"></i>
                         </a>
                         <a href="#" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
                             <i class="fab fa-instagram text-sm sm:text-base"></i>
                         </a>
-                        <a href="https://wa.me/94785391995  " target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                        <a href="https://wa.me/94785391995" target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
                             <i class="fab fa-whatsapp text-sm sm:text-base"></i>
                         </a>
-                        <a href="https://www.tiktok.com/@sunshinecreation1010?fbclid=IwVERDUAQHYqVleHRuA2FlbQIxMABzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeZyIeEs5i892m8cfTVwv7TwD0YrQCSt_rAKMEgwjXoP_gu1sZCIFIrYJjNCA_aem_2BgwVNhLDdHLLjx7RXdkAg  " target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                        <a href="https://www.tiktok.com/@sunshinecreation1010?fbclid=IwVERDUAQHYqVleHRuA2FlbQIxMABzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeZyIeEs5i892m8cfTVwv7TwD0YrQCSt_rAKMEgwjXoP_gu1sZCIFIrYJjNCA_aem_2BgwVNhLDdHLLjx7RXdkAg" target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
                             <i class="fab fa-tiktok text-sm sm:text-base"></i>
                         </a>
-                        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr  " target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
+                        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr" target="_blank" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white bg-opacity-20 flex items-center justify-center hover:bg-white hover:text-primary transition">
                             <i class="fab fa-facebook-messenger text-sm sm:text-base"></i>
                         </a>
                     </div>
@@ -453,7 +427,7 @@
                         </div>
                         <div>
                             <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Message</label>
-                            <textarea rows="3" sm:rows="4" required class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"></textarea>
+                            <textarea rows="3" required class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"></textarea>
                         </div>
                         <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 sm:py-4 rounded-lg transition shadow-lg transform hover:-translate-y-1 text-sm sm:text-base dark:bg-green-600 dark:hover:bg-green-700">
                             <i class="fab fa-whatsapp mr-2"></i> Send via WhatsApp
@@ -522,16 +496,16 @@
 
     <!-- Floating Social Buttons -->
     <div class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 flex flex-col gap-3 z-40">
-        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr  " target="_blank" class="bg-blue-600 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-700 transition transform hover:scale-110">
+        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr" target="_blank" class="bg-blue-600 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-700 transition transform hover:scale-110">
             <i class="fab fa-facebook-f text-xl sm:text-2xl"></i>
         </a>
-        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr  " target="_blank" class="bg-blue-500 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 transition transform hover:scale-110">
+        <a href="https://www.facebook.com/share/1AUo3kHsif/?mibextid=wwXIfr" target="_blank" class="bg-blue-500 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-blue-600 transition transform hover:scale-110">
             <i class="fab fa-facebook-messenger text-xl sm:text-2xl"></i>
         </a>
-        <a href="https://www.tiktok.com/@sunshinecreation1010?fbclid=IwVERDUAQHYqVleHRuA2FlbQIxMABzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeZyIeEs5i892m8cfTVwv7TwD0YrQCSt_rAKMEgwjXoP_gu1sZCIFIrYJjNCA_aem_2BgwVNhLDdHLLjx7RXdkAg  " target="_blank" class="bg-black text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-gray-800 transition transform hover:scale-110">
+        <a href="https://www.tiktok.com/@sunshinecreation1010?fbclid=IwVERDUAQHYqVleHRuA2FlbQIxMABzcnRjBmFwcF9pZAo2NjI4NTY4Mzc5AAEeZyIeEs5i892m8cfTVwv7TwD0YrQCSt_rAKMEgwjXoP_gu1sZCIFIrYJjNCA_aem_2BgwVNhLDdHLLjx7RXdkAg" target="_blank" class="bg-black text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-gray-800 transition transform hover:scale-110">
             <i class="fab fa-tiktok text-xl sm:text-2xl"></i>
         </a>
-        <a href="https://wa.me/94785391995  " target="_blank" id="float-whatsapp" class="bg-green-500 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 animate-pulse">
+        <a href="https://wa.me/94785391995" target="_blank" id="float-whatsapp" class="bg-green-500 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition transform hover:scale-110 animate-pulse">
             <i class="fab fa-whatsapp text-2xl sm:text-3xl"></i>
         </a>
     </div>
@@ -564,7 +538,7 @@
                                 <button onclick="addToCartFromModal()" class="flex-1 bg-primary text-white py-2 sm:py-3 rounded-lg hover:bg-secondary transition shadow-md text-sm dark:bg-green-600 dark:hover:bg-green-700">
                                     Add to Cart
                                 </button>
-                                <a href="https://wa.me/94785391995  " target="_blank" class="flex-1 bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition shadow-md text-center text-sm flex items-center justify-center gap-2">
+                                <a href="https://wa.me/94785391995" target="_blank" class="flex-1 bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition shadow-md text-center text-sm flex items-center justify-center gap-2">
                                     <i class="fab fa-whatsapp"></i> Order via WhatsApp
                                 </a>
                             </div>
@@ -622,7 +596,7 @@
                     name: "Eternal Love Rose Box",
                     price: 4500,
                     category: "love",
-                    image: "https://i.postimg.cc/qq0JFqRV/content.png  ",
+                    image: "https://i.postimg.cc/qq0JFqRV/content.png",
                     desc: "A luxurious box of 12 red roses, perfect for expressing deep love and affection."
                 },
                 {
@@ -630,7 +604,7 @@
                     name: "Sunshine Mixed Bouquet",
                     price: 3200,
                     category: "birthday",
-                    image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=800&auto=format&fit=crop  ",
+                    image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?q=80&w=800&auto=format&fit=crop",
                     desc: "Bright sunflowers and daisies to bring a smile to anyone's face on their special day."
                 },
                 {
@@ -638,7 +612,7 @@
                     name: "White Elegance Wedding Set",
                     price: 15000,
                     category: "wedding",
-                    image: "https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=800&auto=format&fit=crop  ",
+                    image: "https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=800&auto=format&fit=crop",
                     desc: "Pure white lilies and roses arranged for the perfect bridal bouquet."
                 },
                 {
@@ -646,7 +620,7 @@
                     name: "Peaceful Lily Wreath",
                     price: 8500,
                     category: "sympathy",
-                    image: "https://images.unsplash.com/photo-1494336934272-f0efcedfc8d7?q=80&w=800&auto=format&fit=crop  ",
+                    image: "https://images.unsplash.com/photo-1494336934272-f0efcedfc8d7?q=80&w=800&auto=format&fit=crop",
                     desc: "A respectful arrangement of white lilies to convey your condolences."
                 },
                 {
@@ -654,7 +628,7 @@
                     name: "Pink Romance",
                     price: 3800,
                     category: "love",
-                    image: "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?q=80&w=800&auto=format&fit=crop  ",
+                    image: "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?q=80&w=800&auto=format&fit=crop",
                     desc: "Soft pink roses and carnations for a gentle, romantic gesture."
                 },
                 {
@@ -662,7 +636,7 @@
                     name: "Tropical Paradise",
                     price: 5500,
                     category: "birthday",
-                    image: "https://images.unsplash.com/photo-1523694576729-dc99e9c0f9b4?q=80&w=800&auto=format&fit=crop  ",
+                    image: "https://images.unsplash.com/photo-1523694576729-dc99e9c0f9b4?q=80&w=800&auto=format&fit=crop",
                     desc: "Exotic birds of paradise and orchids for a unique and vibrant gift."
                 }
             ],
@@ -672,7 +646,6 @@
 
         // WhatsApp Number - Updated
         const WHATSAPP_NUMBER = "94785391995";
-        const WHATSAPP_EMAIL = "Sunshinecreation1010@gmail.com";
 
         // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -691,19 +664,6 @@
 
             renderProducts();
             updateCartCount();
-            
-            // Google Translate Init
-            window.googleTranslateElementInit = () => {
-                new google.translate.TranslateElement({
-                    pageLanguage: 'en', 
-                    includedLanguages: 'en,si,ta', 
-                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                }, 'google_translate_element');
-            };
-            
-            const script = document.createElement('script');
-            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            document.head.appendChild(script);
         });
 
         // --- Theme Toggle ---
@@ -922,7 +882,7 @@
             const total = state.cart.reduce((sum, item) => sum + item.price, 0);
             message += `%0ATotal: Rs. ${total.toLocaleString()}`;
             
-            window.open(`https://wa.me/  ${WHATSAPP_NUMBER}?text=${message}`, '_blank');
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
         }
 
         // --- Utilities ---
@@ -933,20 +893,10 @@
             setTimeout(() => toast.classList.add('opacity-0'), 3000);
         }
 
-        function changeLanguage(lang) {
-            const select = document.querySelector('.goog-te-combo');
-            if (select) {
-                select.value = lang;
-                select.dispatchEvent(new Event('change'));
-            }
-            document.getElementById('current-lang').innerText = lang.toUpperCase();
-        }
-
         function handleContactSubmit(e) {
             e.preventDefault();
             
             // Get form data
-            const formData = new FormData(e.target);
             const name = e.target.querySelector('input[type="text"]').value;
             const phone = e.target.querySelector('input[type="tel"]').value;
             const email = e.target.querySelector('input[type="email"]').value;
@@ -960,7 +910,7 @@
             whatsappMessage += `*Message:*%0A${message}`;
             
             // Open WhatsApp
-            window.open(`https://wa.me/  ${WHATSAPP_NUMBER}?text=${whatsappMessage}`, '_blank');
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`, '_blank');
             
             showToast('Opening WhatsApp...');
             e.target.reset();
